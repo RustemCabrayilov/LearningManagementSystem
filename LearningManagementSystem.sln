@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{1F2BCDD6-70DB-4089-AC84-8BC6FCF21812}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{42B4E319-FBCA-4FCD-8464-A87B4FAE5A1B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{3C5E5647-7250-4201-B38A-CAA07FA0AE28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{DE48ECE3-0F5B-40A3-9CDB-F7F88A7B7180}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.Domain", "Core\LearningManagementSystem.Domain\LearningManagementSystem.Domain.csproj", "{AE171D0A-D0FB-4739-B7A4-83DC282B5441}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.Application", "Core\LearningManagementSystem.Application\LearningManagementSystem.Application.csproj", "{2EBC8EEF-1B07-4B8A-9123-70DC49FCACE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.BLL", "Infrastructure\LearningManagementSystem.BLL\LearningManagementSystem.BLL.csproj", "{B635FDFD-8CC3-47F1-9BDB-DDF4BFD1535B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.API", "Presentation\LearningManagementSystem.API\LearningManagementSystem.API.csproj", "{E9291682-1540-4C40-9C6E-2AA3FEF461E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4177DD5A-2EAE-4141-A879-F952D9D571FD}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.Persistence", "Infrastructure\LearningManagementSystem.Persistence\LearningManagementSystem.Persistence.csproj", "{F045258F-E360-4CAB-ACE7-D1E13C237A0B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AE171D0A-D0FB-4739-B7A4-83DC282B5441} = {1F2BCDD6-70DB-4089-AC84-8BC6FCF21812}
+		{2EBC8EEF-1B07-4B8A-9123-70DC49FCACE0} = {1F2BCDD6-70DB-4089-AC84-8BC6FCF21812}
+		{B635FDFD-8CC3-47F1-9BDB-DDF4BFD1535B} = {42B4E319-FBCA-4FCD-8464-A87B4FAE5A1B}
+		{E9291682-1540-4C40-9C6E-2AA3FEF461E0} = {3C5E5647-7250-4201-B38A-CAA07FA0AE28}
+		{F045258F-E360-4CAB-ACE7-D1E13C237A0B} = {42B4E319-FBCA-4FCD-8464-A87B4FAE5A1B}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE171D0A-D0FB-4739-B7A4-83DC282B5441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE171D0A-D0FB-4739-B7A4-83DC282B5441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE171D0A-D0FB-4739-B7A4-83DC282B5441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE171D0A-D0FB-4739-B7A4-83DC282B5441}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EBC8EEF-1B07-4B8A-9123-70DC49FCACE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EBC8EEF-1B07-4B8A-9123-70DC49FCACE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EBC8EEF-1B07-4B8A-9123-70DC49FCACE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EBC8EEF-1B07-4B8A-9123-70DC49FCACE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B635FDFD-8CC3-47F1-9BDB-DDF4BFD1535B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B635FDFD-8CC3-47F1-9BDB-DDF4BFD1535B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B635FDFD-8CC3-47F1-9BDB-DDF4BFD1535B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B635FDFD-8CC3-47F1-9BDB-DDF4BFD1535B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9291682-1540-4C40-9C6E-2AA3FEF461E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9291682-1540-4C40-9C6E-2AA3FEF461E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9291682-1540-4C40-9C6E-2AA3FEF461E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9291682-1540-4C40-9C6E-2AA3FEF461E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F045258F-E360-4CAB-ACE7-D1E13C237A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F045258F-E360-4CAB-ACE7-D1E13C237A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F045258F-E360-4CAB-ACE7-D1E13C237A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F045258F-E360-4CAB-ACE7-D1E13C237A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

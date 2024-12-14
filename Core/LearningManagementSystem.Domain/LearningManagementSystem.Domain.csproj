@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Class1.cs" />
+      <Compile Remove="Entities\Transcript.cs" />
+      <Compile Remove="Entities\Attendance.cs" />
+      <Compile Remove="Entities\CompleteExam.cs" />
+      <Compile Remove="Entities\Schedule.cs" />
+      <Compile Remove="Entities\ScheduleLesson.cs" />
+      <Compile Remove="Entities\StudentSchedule.cs" />
+      <Compile Remove="Enums\CandidateType.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
+    </ItemGroup>
+
+</Project>

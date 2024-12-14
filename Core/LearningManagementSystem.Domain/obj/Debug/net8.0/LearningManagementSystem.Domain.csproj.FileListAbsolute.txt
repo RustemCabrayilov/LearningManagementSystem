@@ -1,0 +1,24 @@
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\bin\Debug\net8.0\LearningManagementSystem.Domain.deps.json
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\bin\Debug\net8.0\LearningManagementSystem.Domain.dll
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\bin\Debug\net8.0\LearningManagementSystem.Domain.pdb
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.csproj.AssemblyReference.cache
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.AssemblyInfoInputs.cache
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.AssemblyInfo.cs
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.dll
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\refint\LearningManagementSystem.Domain.dll
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.pdb
+C:\Users\ASUS\Desktop\Final Project\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\ref\LearningManagementSystem.Domain.dll
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\bin\Debug\net8.0\LearningManagementSystem.Domain.deps.json
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\bin\Debug\net8.0\LearningManagementSystem.Domain.dll
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\bin\Debug\net8.0\LearningManagementSystem.Domain.pdb
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.csproj.AssemblyReference.cache
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.AssemblyInfoInputs.cache
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.AssemblyInfo.cs
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.dll
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\refint\LearningManagementSystem.Domain.dll
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\LearningManagementSystem.Domain.pdb
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Core\LearningManagementSystem.Domain\obj\Debug\net8.0\ref\LearningManagementSystem.Domain.dll

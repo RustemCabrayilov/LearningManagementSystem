@@ -1,0 +1,183 @@
+﻿.pagination-footer {
+    overflow: hidden;
+    bottom: 0;
+    left: 0; /* Ensure it starts from the left edge */
+    width: 100%; /* Ensure it takes the full width of the screen */
+    height: 100px;
+    background: #393994;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    position: relative;
+    margin-top: 10px;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%; /* Make sure this takes up all available space */
+    max-width: 1200px; /* Optional: set a max width if needed */
+}
+
+.btn-pagination {
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s ease;
+    fill: #fff;
+    border: 2px solid transparent; /* Transparent border for better focus outline */
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Hover Effect */
+.btn-pagination:hover {
+    transform: scale(1.1);
+}
+
+/* Click Effect */
+.btn-pagination:active {
+    transform: scale(0.95); /* Button scales down a little */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on click */
+}
+
+/* Previous and Next SVG */
+.btn--prev svg, .btn--next svg {
+    width: 36px;
+    height: 36px;
+    fill: #fff;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect for icons */
+.btn--prev:hover svg, .btn--next:hover svg {
+    transform: scale(1.2);
+}
+
+/* Click effect for icons */
+.btn--prev:active svg, .btn--next:active svg {
+    transform: scale(1); /* Icon scale down effect on click */
+}
+
+.little-dot {
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 6px;
+    position: relative;
+    z-index: 10;
+}
+
+.little-dot--first,
+.little-dot--last {
+    z-index: 5;
+}
+
+@keyframes pagination-container--animation-prev {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(18px); }
+}
+
+@keyframes pagination-container--animation-next {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-18px); }
+}
+
+.transition-prev .pagination-container {
+    animation: pagination-container--animation-prev 0.3s forwards;
+}
+
+.transition-next .pagination-container {
+    animation: pagination-container--animation-next 0.3s forwards;
+}
+
+@keyframes slideLeft {
+    0% { transform: translateX(0px); }
+    100% { transform: translateX(-18px); }
+}
+
+.transition-prev .little-dot--first {
+    animation: slideLeft 0.4s 0.3s forwards cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes little-dot--first--animation {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.transition-next .little-dot--first {
+    animation: little-dot--last--animation 0.3s forwards;
+}
+
+@keyframes little-dot--last--animation {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.transition-prev .little-dot--last {
+    animation: little-dot--last--animation 0.3s forwards;
+}
+
+@keyframes slideRight {
+    0% { transform: translateX(0px); opacity: 1; }
+    100% { transform: translateX(18px); opacity: 1; }
+}
+
+.transition-next .little-dot--last {
+    animation: slideRight 0.4s 0.3s forwards cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.big-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    background: #f6af54;
+    position: absolute;
+    top: 50%;
+    right: -6px;
+    transform: translateY(-50%);
+}
+
+.transition-next .big-dot {
+    right: auto;
+    left: -6px;
+}
+
+.big-dot-container {
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    position: absolute;
+    top: 50%;
+    right: 3px;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.transition-next .big-dot-container {
+    right: auto;
+    left: 3px;
+}
+
+@keyframes big-dot-container--animation-prev {
+    0% { transform: translateY(-50%); }
+    100% { transform: translateY(-50%) rotate(-179deg); }
+}
+
+@keyframes big-dot-container--animation-next {
+    0% { transform: translateY(-50%); }
+    100% { transform: translateY(-50%) rotate(-181deg); }
+}
+
+.transition-prev .big-dot-container {
+    animation: big-dot-container--animation-prev 0.3s forwards;
+}
+
+.transition-next .big-dot-container {
+    animation: big-dot-container--animation-next 0.3s forwards;
+}

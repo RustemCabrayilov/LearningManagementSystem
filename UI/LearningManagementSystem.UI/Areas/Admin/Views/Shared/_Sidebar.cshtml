@@ -1,0 +1,121 @@
+﻿<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item nav-profile">
+      <a href="#" class="nav-link">
+        <div class="nav-profile-image">
+          <img src="assets/images/faces/face1.jpg" alt="profile">
+          <span class="login-status online"></span>
+          <!--change to offline or busy as needed-->
+        </div>
+        <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Admin/Home/Index">
+        <span class="menu-title">Dashboard</span>
+        <i class="mdi mdi-home menu-icon"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="pages/charts/chartjs.html">
+        <span class="menu-title">Charts</span>
+        <i class="mdi mdi-chart-bar menu-icon"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
+        <span class="menu-title">Sample Pages</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-medical-bag menu-icon"></i>
+      </a>
+      <div class="collapse" id="general-pages">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Faculties" asp-action="Index">Faculties</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Majors" asp-action="Index">Majors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Terms" asp-action="Index">Terms</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Users" asp-action="Index">Users</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Roles" asp-action="Index">Roles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Lessons" asp-action="Index">Lessons</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Attendances" asp-action="Index">Attendances</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="RetakeExams" asp-action="Index">Retake Exams</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Deans" asp-action="Index">Deans</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Teachers" asp-action="Index">Teachers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Users" asp-action="Index">Users</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Groups" asp-action="Index">Groups</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="GroupSchedules" asp-action="Index">Group Schedule</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Subjects" asp-action="Index">Subjects</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Students" asp-action="Index">Students</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Exams" asp-action="Index">Exams</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Themes" asp-action="Index">Themes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Surveys" asp-action="Index">Surveys</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Questions" asp-action="Index">Questions</a>
+          </li>
+          @if (User.IsInRole("Dean"))
+          {
+            <li class="nav-item">
+              <a class="nav-link text-dark" asp-area="" asp-controller="Students" asp-action="Details">Dean</a>
+            </li>
+          }
+          @if (!User.Identity.IsAuthenticated)
+          {
+            <li class="nav-item">
+              <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="SignIn">signIn</a>
+            </li>
+          }
+ 
+          @if (User.Identity.IsAuthenticated)
+          {
+            <li class="nav-item">
+              <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Log out
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item sidebar-actions">
+      <span class="nav-link">
+        <div class="mt-4">
+        </div>
+      </span>
+    </li>
+  </ul>
+</nav>

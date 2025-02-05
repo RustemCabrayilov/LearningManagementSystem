@@ -7,6 +7,6 @@ public class TeacherMappingProfile:Profile
     public TeacherMappingProfile()
     {
         CreateMap<TeacherRequest, Domain.Entities.Teacher>();
-        CreateMap<Domain.Entities.Student, TeacherResponse>();
+        CreateMap<Domain.Entities.Teacher, TeacherResponse>();
     }   
 }

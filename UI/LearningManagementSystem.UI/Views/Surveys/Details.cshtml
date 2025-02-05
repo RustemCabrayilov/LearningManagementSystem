@@ -1,0 +1,32 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.Vote.VoteRequest[]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey</title>
+    <link rel="stylesheet" href="~/css/survey.css">
+</head>
+
+
+        <form  asp-action="Details" method="post">
+            <!-- Question 4 -->
+            <div class="form-group">
+                @{ var count = 0;}
+                @foreach (var item in ViewBag?.Questions)
+                {
+                    <input hidden name="votes[@count].QuestionId" value="@item.Id">
+                    <p class="question">@item.Description @count</p>
+                    for (int i = 1; i <= item.MaxPoint; i++)
+                    {
+                        <div class="rating-options">
+                            <label><input type="radio" name="votes[@count].Point" value="@i"> @i</label>
+                        </div>
+                    }
+                    count++;
+                }
+            </div>
+
+            <button type="submit" class="survey-button">Submit Survey</button>
+        </form>
+</html>

@@ -1,6 +1,8 @@
 ﻿using LearningManagementSystem.Application.Abstractions.Services.Exam;
+using LearningManagementSystem.Application.Abstractions.Services.GroupSchedule;
 using LearningManagementSystem.Application.Abstractions.Services.Lesson;
 using LearningManagementSystem.Application.Abstractions.Services.Major;
+using LearningManagementSystem.Application.Abstractions.Services.Student;
 using LearningManagementSystem.Application.Abstractions.Services.Subject;
 using LearningManagementSystem.Application.Abstractions.Services.Teacher;
 using LearningManagementSystem.Application.Abstractions.Services.Term;
@@ -11,13 +13,13 @@ public record GroupResponse(
     Guid Id,
     char Code,
     string Name,
-    TimeSpan StartDate,
-    TimeSpan EndDate,
-    DayOfWeek DayOfWeek,
+    int Credit,
+    bool CanApply,
     TermResponse Term,
     TeacherResponse Teacher,
     SubjectResponse Subject,
     MajorResponse Major,
-    List<LessonResponse> Lessons,
-    List<ExamResponse> Exams
-    );
+    List<GroupScheduleResponse> GroupSchedules = null,
+    List<LessonResponse> Lessons = null,
+    List<StudentResponse> Students = null,
+    List<ExamResponse> Exams = null);

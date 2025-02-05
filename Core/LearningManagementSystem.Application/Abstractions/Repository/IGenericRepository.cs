@@ -11,4 +11,6 @@ public interface IGenericRepository<T> where T : BaseEntity, new()
     bool Remove(T entity);
     Task<T> GetAsync(Expression<Func<T, bool>> predicate, params string[] includes);
     IQueryable<T> GetAll(Expression<Func<T, bool>> predicate, RequestFilter? filter);
+    ValueTask<bool> AddRangeAsync(List<T> datas); 
+    bool UpdateRange(List<T> datas);
 }

@@ -1,4 +1,6 @@
-﻿namespace LearningManagementSystem.Application.Abstractions.Services.Lesson;
+﻿using LearningManagementSystem.Persistence.Filters;
+
+namespace LearningManagementSystem.Application.Abstractions.Services.Lesson;
 
 public interface ILessonService
 {
@@ -6,5 +8,5 @@ public interface ILessonService
     Task<LessonResponse> UpdateAsync(Guid id,LessonRequest dto);
     Task<LessonResponse> RemoveAsync(Guid id);
     Task<LessonResponse> GetAsync(Guid id);
-    Task<IList<LessonResponse>> GetAllAsync();
+    Task<IList<LessonResponse>> GetAllAsync(RequestFilter? filter);
 }

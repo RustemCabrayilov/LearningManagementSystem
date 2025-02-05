@@ -1,0 +1,28 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.Student.StudentRetakeExamDto
+
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <form class="forms-sample" asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input hidden asp-for="StudentId" type="text" class="form-control">
+                    <input hidden asp-for="RetakeExamId" type="text" class="form-control">
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label">
+                        Status
+                    </label>
+                    <select asp-for="Status" class="form-control" asp-items="@(new SelectList(ViewBag.StatusList))">
+                        <option>Please select one</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                <button class="btn btn-light" asp-action="Index">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>

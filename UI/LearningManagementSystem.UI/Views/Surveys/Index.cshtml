@@ -1,0 +1,14 @@
+﻿@model IList<LearningManagementSystem.Application.Abstractions.Services.Survey.SurveyResponse>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Surveys</h2>
+@foreach (var item in Model)
+{
+    <a class="btn btn-warning"  asp-controller="Surveys" asp-action="Details" asp-route-id="@item.Id">
+        @item.Name
+    </a>
+}

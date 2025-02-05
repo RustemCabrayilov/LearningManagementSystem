@@ -8,6 +8,7 @@ public interface IUserService
     Task<UserResponse> UpdateAsync(string id,UserRequest dto);
     Task<UserResponse> RemoveAsync(string id);
     Task<UserResponse> GetAsync(string id);
-    Task<IList<UserResponse>> GetAllAsync();   
+    Task<IList<UserResponse>> GetAllAsync(RequestFilter? filter);   
     Task<UserResponse> AssignRoleAsync(UserRoleDto dto);   
+    Task<UserClaim> GetUserInfosByToken(string token);   
 }

@@ -8,14 +8,10 @@ public class VoteConfiguration:IEntityTypeConfiguration<Vote>
 {
     public void Configure(EntityTypeBuilder<Vote> builder)
     {
-        builder.HasOne(x => x.Teacher)
-            .WithMany(x => x.Votes)
-            .HasForeignKey(x => x.TeacherId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.Property(x => x.Point).IsRequired();
+        builder.Property(x => x.QuestionId).IsRequired();
+        builder.Property(x => x.StudentId).IsRequired();
 
-        builder.HasOne(x => x.Student)
-            .WithMany(x => x.Votes)
-            .HasForeignKey(x => x.StudentId)
-            .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

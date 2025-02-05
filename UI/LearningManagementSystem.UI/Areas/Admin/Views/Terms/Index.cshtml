@@ -1,0 +1,56 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Term.TermResponse>
+
+@{
+    ViewBag.Title = "title";
+}
+<link rel="stylesheet" href="~/css/togglebtn.css">
+<a class="btn btn-primary" asp-action="Create" asp-controller="Terms">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Term Season</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.TermSeason</td>
+            <td>@item.StartDate</td>
+            <td>@item.EndDate</td>
+            @*<td><label class="badge badge-danger">Pending</label></td>*@
+            <td>
+                <a class="btn btn-warning" asp-area="admin" asp-controller="Terms" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="far fa-pen-to-square"></i>
+                </a>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                    <i class="fas fa-trash-can"></i>
+                </button>
+                @await Html.PartialAsync("_Delete",item)
+            </td>
+            <td>
+                <!-- Toggle Button for Active (Boolean) value -->
+
+
+                <label class="switch">
+                    <a asp-area="Admin" asp-controller="Terms" asp-action="ActivateTerm" asp-route-id="@item.Id">
+                        <input type="checkbox" class="toggle-btn" @(item.IsActive ? "checked" : "") data-id="@item.Id"/>
+                        <span class="slider round"></span>
+                    </a>
+                </label>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<partial name="_Pagination"/>

@@ -1,0 +1,60 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.Group.GroupRequest
+
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <form class="forms-sample" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label for="Code">Code</label>
+                    <input asp-for="Code" type="text" class="form-control" id="Code" placeholder="Group Code">
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" type="text" class="form-control" id="Name" placeholder="Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Credit">Credit</label>
+                    <input asp-for="Credit" type="number" class="form-control" id="Credit" placeholder="Credit">
+                    <span asp-validation-for="Credit" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CanApply">Can Apply</label>
+                    <input asp-for="CanApply" type="checkbox" class="form-control" id="CanApply">
+                </div>
+                <div class="form-group">
+                    <label asp-for="MajorId" class="control-label">Major</label>
+                    <select asp-for="MajorId"
+                            class="form-control"
+                            asp-items="@(new SelectList(ViewBag.Majors,"Id","Title"))">
+                        <option>Please select one</option>
+                    </select>
+                    <span asp-validation-for="MajorId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TeacherId" class="control-label">Teachers</label>
+                    <select asp-for="TeacherId"
+                            class="form-control"
+                            asp-items="@(new SelectList(ViewBag.Teachers,"Id","Name"))">
+                        <option>Please select one</option>
+                    </select>
+                    <span asp-validation-for="TeacherId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SubjectId" class="control-label">Subjects</label>
+                    <select asp-for="SubjectId"
+                            class="form-control"
+                            asp-items="@(new SelectList(ViewBag.Subjects,"Id","Name"))">
+                        <option>Please select one</option>
+                    </select>
+                    <span asp-validation-for="SubjectId" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                <button class="btn btn-light" asp-action="Index">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>

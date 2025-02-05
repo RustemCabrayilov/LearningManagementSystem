@@ -12,12 +12,17 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="AWSSDK.S3" Version="4.0.0-preview.5" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="Class1.cs" />
       <Compile Remove="Abstractions\Services\Result\**" />
+      <Compile Remove="Abstractions\Services\Document\DocumentValidator.cs" />
+      <Compile Remove="Abstractions\Services\Student\StudentLessonDto.cs" />
+      <Compile Remove="Abstractions\Services\Teacher\TeacherGroupDto.cs" />
+      <Compile Remove="Abstractions\Services\Storage\IStorageService.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,6 +31,10 @@
 
     <ItemGroup>
       <None Remove="Abstractions\Services\Result\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Abstractions\Services\Storage\Local\" />
     </ItemGroup>
 
 </Project>

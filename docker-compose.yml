@@ -1,12 +1,5 @@
 ﻿services:
-  learningmanagementsystem.api:
-    image: learningmanagementsystem.api
-    build:
-      context: .
-      dockerfile: Presentation/LearningManagementSystem.API/Dockerfile
-
-  learningmanagementsystem.persistence:
-    image: learningmanagementsystem.persistence
-    build:
-      context: .
-      dockerfile: Infrastructure/LearningManagementSystem.Persistence/Dockerfile
+  redis:
+      image: redis
+      ports:
+      - "6379:6379"

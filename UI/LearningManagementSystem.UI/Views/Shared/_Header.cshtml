@@ -1,0 +1,66 @@
+﻿<header>
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LMS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="Admin" asp-controller="Terms" asp-action="Index">Terms</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="@Url.Action("Index", "Groups")">
+                        Groups
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Attendances" asp-action="Index">Attendances</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="RetakeExams" asp-action="Index">Retake Exams</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Students" asp-action="AssignGroup">Take Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="StudentGroups" asp-action="Index">Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Surveys" asp-action="Index">Surveys</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Chat" asp-action="Chat">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Lessons" asp-action="Index">Lessons</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Transcripts" asp-action="Index">Transcripts</a>
+                </li>
+                @if (User. Identity.IsAuthenticated)
+                {
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Log out
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </li>  
+                }
+                @if (!User.Identity.IsAuthenticated)
+                {
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="SignIn">signIn</a>
+                </li>
+                }
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Details"><i class="fa-regular fa-user"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</header>
+

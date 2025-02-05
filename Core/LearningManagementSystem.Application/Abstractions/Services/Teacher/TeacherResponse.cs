@@ -12,5 +12,5 @@ public record TeacherResponse(
     float Rate,
     AppUser AppUser,
     Domain.Entities.Faculty Faculty,
-    IFormFile? File
+    string FileUrl=null
     );

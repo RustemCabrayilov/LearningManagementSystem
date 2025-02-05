@@ -9,5 +9,4 @@ public interface ITeacherService
     Task<TeacherResponse> RemoveAsync(Guid id);
     Task<TeacherResponse> GetAsync(Guid id);
     Task<IList<TeacherResponse>> GetAllAsync(RequestFilter? filter);
-    Task<TeacherResponse> AssignGroupAsync(TeacherGroupDto dto);
 }

@@ -1,10 +1,11 @@
-﻿namespace LearningManagementSystem.Application.Abstractions.Services.Major;
+﻿using LearningManagementSystem.Application.Abstractions.Services.Faculty;
+
+namespace LearningManagementSystem.Application.Abstractions.Services.Major;
 
 public record MajorRequest(
-    string Name,
+    string Title,
     float Point,
     string EducationLanguage,
     decimal TuitionFee,
-    decimal StateFunded,
-    Guid FacultyId
-);
+    bool StateFunded,
+    Guid FacultyId);

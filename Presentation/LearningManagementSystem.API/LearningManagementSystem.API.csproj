@@ -18,15 +18,58 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+      <ProjectReference Include="..\..\Core\LearningManagementSystem.Application\LearningManagementSystem.Application.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\LearningManagementSystem.BLL\LearningManagementSystem.BLL.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\LearningManagementSystem.Infrastructure\LearningManagementSystem.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\LearningManagementSystem.Persistence\LearningManagementSystem.Persistence.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\LearningManagementSystem.SignalR\LearningManagementSystem.SignalR.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Core\LearningManagementSystem.Application\LearningManagementSystem.Application.csproj" />
-      <ProjectReference Include="..\..\Infrastructure\LearningManagementSystem.BLL\LearningManagementSystem.BLL.csproj" />
-      <ProjectReference Include="..\..\Infrastructure\LearningManagementSystem.Persistence\LearningManagementSystem.Persistence.csproj" />
+      <None Remove="Dockerfile" />
+      <None Remove=".dockerignore" />
+      <None Remove="Images\**" />
+      <None Remove="tessdata\**" />
+      <None Remove="Documents\Deans\15ba44fd-c15a-482a-9c11-0c5101a8869d.pdf" />
+      <None Remove="Documents\Deans\17f9b505-a11b-4acb-acc6-90f09572b3d6.pdf" />
+      <None Remove="Documents\Deans\563c7983-8504-4d71-aa05-f6082a6dce2c.pdf" />
+      <None Remove="Documents\Deans\2e0eff41-6e00-4ce2-89d7-f94b1bedc60a.tmp" />
+      <None Remove="Documents\Deans\63c29ddf-cd6d-45dd-98ba-da1ba6426a3e.tmp" />
+      <None Remove="Documents\Deans\78e6cee5-cd21-4e8f-9c07-ca9462f96b5c.tmp" />
+      <None Remove="Documents\Deans\90ceffc9-6c0e-42df-b469-7db4f7ddd517.tmp" />
+      <None Remove="Documents\Deans\293d545c-1d45-4328-9dd0-82cd49089553.tmp" />
+      <None Remove="Documents\Deans\400a5949-aefc-4799-b31b-36a1b281b753.tmp" />
+      <None Remove="Documents\Deans\746cb644-a833-462d-af31-c4fed95a5639.tmp" />
+      <None Remove="Documents\Deans\768e8462-dd18-4e8c-9def-35280000089f.tmp" />
+      <None Remove="Documents\Deans\978f4361-a322-4e88-9f4c-ed10e9d2ffb6.tmp" />
+      <None Remove="Documents\Deans\88778732-0be7-44d0-af96-f89fb7ed20ca.tmp" />
+      <None Remove="Documents\Deans\d1ebaafb-98b4-4a27-b686-5b21e0388476.tmp" />
+      <None Remove="Documents\Deans\d5827169-42a3-417e-8a70-1e3670ae2b5c.tmp" />
+      <None Remove="Documents\Deans\e72a40c8-68a7-4510-b3ae-560c70da4701.tmp" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Images\**" />
+      <Compile Remove="tessdata\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Images\**" />
+      <EmbeddedResource Remove="tessdata\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Images\**" />
+      <Content Remove="tessdata\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Documents\Deans\" />
+      <Folder Include="Documents\StudentExams\" />
+      <Folder Include="Documents\RetakeExams\" />
+      <Folder Include="Documents\Students\" />
+      <Folder Include="Documents\Teachers\" />
+      <Folder Include="Logs\" />
     </ItemGroup>
 
 </Project>

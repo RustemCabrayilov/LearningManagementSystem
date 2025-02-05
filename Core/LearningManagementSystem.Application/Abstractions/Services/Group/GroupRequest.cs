@@ -3,11 +3,9 @@
 public record GroupRequest(
     char Code,
     string Name,
-    TimeSpan StartDate,
-    TimeSpan EndDate,
-    DayOfWeek DayOfWeek,
-    Guid TermId,
+    int Credit,
     Guid TeacherId,
+    bool CanApply,
     Guid SubjectId,
     Guid MajorId
 );

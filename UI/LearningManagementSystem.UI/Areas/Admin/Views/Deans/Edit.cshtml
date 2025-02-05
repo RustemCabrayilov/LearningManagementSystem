@@ -1,0 +1,61 @@
+﻿@using LearningManagementSystem.Domain.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LearningManagementSystem.Application.Abstractions.Services.Dean.DeanRequest
+
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <form class="forms-sample" asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" type="text" class="form-control" id="StartDate" placeholder="Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Surname">Surname</label>
+                    <input asp-for="Surname" type="text" class="form-control" id="Surname" placeholder="Surname">
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Salary">Salary</label>
+                    <input asp-for="Salary" type="number" min="0" class="form-control" id="Salary" placeholder="Salary">
+                    <span asp-validation-for="Salary" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PositionType" class="control-label">Position Type</label>
+                    <select asp-for="PositionType" class="form-control" asp-items="@(new SelectList(ViewBag.PositionTypeList, "Value", "Text"))">
+                        <option value="">Please select one</option> <!-- Default option -->
+                    </select>
+                    <span asp-validation-for="PositionType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FacultyId" class="control-label">Faculty</label>
+                    <select asp-for="FacultyId"
+                            class="form-control"
+                            asp-items="@(new SelectList(ViewBag.Faculties, "Id", "Name"))">
+                        <option>Please select one</option>
+                    </select>
+                    <span asp-validation-for="FacultyId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AppUserId" class="control-label">User</label>
+                    <select asp-for="AppUserId"
+                            class="form-control"
+                            asp-items="@(new SelectList(ViewBag.Users, "Id", "UserName"))">
+                        <option>Please select one</option>
+                    </select>
+                    <span asp-validation-for="AppUserId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="File" class="control-label"></label>
+                    <input asp-for="File" type="file"  class="form-control" />
+                    <span asp-validation-for="File" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                <button class="btn btn-light" asp-action="Index">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>

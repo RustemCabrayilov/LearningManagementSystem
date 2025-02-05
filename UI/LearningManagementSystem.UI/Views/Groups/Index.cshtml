@@ -1,0 +1,83 @@
+﻿@using LearningManagementSystem.Persistence.Filters
+@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Group.GroupResponse>
+
+@{
+ViewBag.Title = "Group List";
+}
+
+<style>
+    /* Style for the toggle button */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 34px;
+        height: 20px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(14px);
+    }
+</style>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Group Code</th>
+        <th>Credit</th>
+        <th>Exams</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@item.Id</td>
+        <td>@item.Name</td>
+        <td>@item.Code</td>
+        <td>@item.Credit</td>
+        <td>
+            <a class="btn btn-primary" href="@Url.Action("Index", "Exams", new RequestFilter(){ FilterField ="GroupId",FilterGuidValue = @item.Id })">
+                Exams
+            </a>
+        </td>
+    </tr>
+    }
+    </tbody>
+</table>
+

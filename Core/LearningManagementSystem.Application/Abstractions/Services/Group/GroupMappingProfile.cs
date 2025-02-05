@@ -9,7 +9,5 @@ public class GroupMappingProfile:Profile
     {
         CreateMap<GroupRequest, Domain.Entities.Group>();
         CreateMap<Domain.Entities.Group, GroupResponse>();
-        CreateMap<ExamGroupDto,ExamGroup>();
-        CreateMap<ExamGroup,GroupResponse>();
     }
 }

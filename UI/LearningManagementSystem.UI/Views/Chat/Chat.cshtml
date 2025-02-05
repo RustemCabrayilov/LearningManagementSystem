@@ -1,0 +1,262 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.Chat.ChatResponse
+@{
+    Layout = null;
+    int i = 1;
+}
+<link rel="stylesheet" href="~/css/signalr.css"/>
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<link rel="icon" type="image/x-icon" href="~/Images/chatIcon.png">
+<title>Ministore ChatBox</title>
+
+<div class="container">
+    <!-- Content wrapper start -->
+    <div class="content-wrapper" style="height: 100vh;">
+
+        <!-- Row start -->
+        <div class="row gutters">
+
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                <div class="card m-0">
+
+                    <!-- Row start -->
+                    <div class="row no-gutters" style="height: 100vh;">
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
+                            <div class="users-container">
+                                <div class="chat-search-box">
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="Search">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-warning">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="users">
+                                    @foreach (var admin in Model.Users)
+                                    {
+                                        <li class="person" data-chat="person1">
+                                            <div class="user">
+                                                <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png"
+                                                     alt="Retail Admin">
+                                                @if (!string.IsNullOrEmpty(admin.ConnectionId))
+                                                {
+                                                    <span id="@admin.Id" class="status online"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span id="@admin.Id" class="status offline"></span>
+                                                }
+                                            </div>
+                                            <p class="name-time">
+                                                <span class="name">@admin.UserName</span>
+                                                @foreach (var role in @admin.Roles)
+                                                {
+                                                    <span class="role-badge">@role</span>
+                                                    <!-- Display role in a badge-like style -->
+                                                }
+                                            </p>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        @foreach (var admin in Model.Users)
+                        {
+                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9 @(i == 1 ? "chat-active" : "d-none")"
+                                 id="chat@(admin.Id)">
+                                <div class="selected-user" style="position: relative">
+                                    <span>To: <span class="name">@admin.UserName</span></span>
+                                    <a class="btn btn-outline-danger closeBtn" asp-action="Index" asp-controller="Home">Exit</a>
+                                </div>
+                                <div class="chat-container">
+                                    <ul class="chat-box chatContainerScroll" style="overflow: scroll">
+                                    </ul>
+                                    <div class="input-group mt-3 mb-0">
+                                        <input type="text" class="form-control messageInput"
+                                               placeholder="Type your message here..."/>
+                                        <input class="userInput" value="@admin.Id" hidden/>
+                                        <div class="input-group-append">
+                                            <button asp-controller="Chat" asp-action="SendMessage" class="btn btn-outline-warning sendButton" type="button">Send</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {
+                                i++;
+                            }
+                        }
+                    </div>
+                    <!-- Row end -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Content wrapper end -->
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+
+<script>
+    // Function to retrieve the value of a cookie by its name
+    function getCookie(name) {
+        let cookieArr = document.cookie.split(";");  // Split cookies by semicolon
+        // Loop through all cookies and search for the specified cookie name
+        for (let i = 0; i < cookieArr.length; i++) {
+            let cookie = cookieArr[i].trim();  // Remove leading spaces from the cookie value
+
+            // Check if the cookie starts with the given name followed by "="
+            if (cookie.startsWith(name + "=")) {
+                return cookie.substring(name.length + 1);  // Return the cookie value (after the "=")
+            }
+        }
+        return null;  // Return null if the cookie is not found
+    }
+
+    var connection = new signalR.HubConnectionBuilder().withUrl('https://localhost:44347/chatHub').build();
+    connection.start().then(() => {
+        var accessToken = getCookie("access_token");  // Retrieve token from cookies
+                console.log(accessToken);
+        if (accessToken) {
+            try {
+                var decodedToken = jwt_decode(accessToken);  // Decode the token
+                var userId = decodedToken.sub || decodedToken.id;  // Extract user ID (adjust based on your token structure)
+                console.log("User ID:", userId);  // You can now use this userId
+                // Connect the user to the SignalR hub
+                connection.invoke("Connect", userId).catch(err => console.error(err.toString()));
+            } catch (error) {
+                console.error("Failed to decode token", error);
+            }
+        } else {
+            console.error("Access token is not available.");
+        }
+
+        connection.on("Login", function (userId) {
+            let user = document.getElementById(userId);
+            user.style.background = "green";
+        });
+
+        connection.on("Logout", function (userId) {
+            let user = document.getElementById(userId);
+            user.style.background = "red";
+        });
+
+        connection.on("ReceiveMessage", function (userId, message) {
+            var chat = document.querySelector(`#chat${userId} .chat-box`);
+            let currentDate = new Date();
+            let hours = String(currentDate.getHours()).padStart(2, '0');
+            let minutes = String(currentDate.getMinutes()).padStart(2, '0');
+            let formattedTime = `${hours}:${minutes}`;
+
+            chat.innerHTML += `<li class="chat-left">
+                    <div class="chat-avatar">
+                        <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin">
+                        <div class="chat-name">Receiver</div>
+                    </div>
+                    <div class="chat-text">${message}</div>
+                    <div class="chat-hour">${formattedTime}</div>
+                </li>`;
+
+            chat.scrollTop = chat.scrollHeight;
+        });
+    })
+        .catch(err => console.error(err.toString()));
+
+    var persons = document.querySelectorAll(".person");
+    persons.forEach(person => {
+        person.addEventListener("click", () => {
+            var id = person.querySelector("span").id;
+            var chat = document.querySelector(`#chat${id}`);
+            document.querySelectorAll(".chat-active").forEach(x => x.classList.add("d-none"));
+            chat.classList.remove("d-none");
+            chat.classList.add("chat-active");
+        });
+    });
+
+    document.querySelectorAll(".sendButton").forEach(btn => {
+        btn.addEventListener("click", () => {
+            var message = btn.parentElement.parentElement.querySelector(".messageInput").value;
+            var toUserId = btn.parentElement.parentElement.querySelector(".userInput").value;
+
+            if (message.trim() === "") {
+                alert("Message cannot be empty.");
+                return;
+            }
+
+            // Prepare the data to be sent to the SendMessage action
+            var accessToken = getCookie("access_token");  // Retrieve token from cookies
+            console.log(accessToken);
+            if (accessToken) {
+                
+                    var decodedToken = jwt_decode(accessToken);  // Decode the token
+                    var userId = decodedToken.sub || decodedToken.id;
+                    
+                    var data = {
+                ToUserId: toUserId,
+                UserId: userId,   // User ID from the hidden input field
+                Message: message };  // Message to send
+            };
+
+            $.ajax({
+                url: '@Url.Action("SendMessage", "Chat")',  // URL of the SendMessage action
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    // After successfully sending the message, clear the input field
+                    btn.parentElement.parentElement.querySelector(".messageInput").value = "";
+
+                    let currentDate = new Date();
+                    let hours = String(currentDate.getHours()).padStart(2, '0');
+                    let minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                    let formattedTime = `${hours}:${minutes}`;
+
+                    var chat = document.querySelector(`#chat${toUserId} .chat-box`);
+
+                    chat.innerHTML += ` 
+                        <li class="chat-right">
+                            <div class="chat-text">${message}</div>
+                            <div class="chat-hour">${formattedTime}</div>
+                            <div class="chat-avatar">
+                                <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="You">
+                                <div class="chat-name">You</div>
+                            </div>
+                        </li>
+                    `;
+
+                    chat.scrollTop = chat.scrollHeight;  // Scroll to the bottom of the chat
+                },
+                error: function (error) {
+                    console.error("Error sending message:", error);
+                    alert("There was an error sending the message.");
+                }
+            });
+            
+        });
+    });
+
+    window.addEventListener('beforeunload', function () {
+        var accessToken = getCookie("access_token");  // Retrieve token from cookies
+        if (accessToken) {
+            try {
+                var decodedToken = jwt_decode(accessToken);  // Decode the token
+                var userId = decodedToken.sub || decodedToken.id;  // Extract user ID
+
+                // Disconnect the user from the SignalR hub
+                connection.invoke("Disconnect", userId).catch(err => console.error(err.toString()));
+            } catch (error) {
+                console.error("Failed to decode token", error);
+            }
+        } else {
+            console.error("Access token is not available.");
+        }
+    });
+</script>

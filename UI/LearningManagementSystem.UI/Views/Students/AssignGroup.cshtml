@@ -1,0 +1,166 @@
+﻿@using LearningManagementSystem.Application.Helper
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+ViewBag.Title = "Assign Groups";
+Layout = "_Layout";
+}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Lesson Schedule</title>
+  <link rel="stylesheet" href="~/css/schedule.css">
+</head>
+<body>
+
+<div class="container">
+  <!-- Left side: Lesson list -->
+  <div class="lesson-list">
+    <h3>Select Lesson</h3>
+    <ul>
+      @foreach (var item in ViewBag.Groups)
+      {
+      <li data-lesson="@item.Name" data-id="@item.Id">@item.Name</li>
+      }
+    </ul>
+  </div>
+
+  <!-- Right side: Weekly Schedule -->
+  <div class="schedule">
+    <!-- Header for Days of the Week -->
+    <div class="header">Time</div>
+    <div class="header">Monday</div>
+    <div class="header">Tuesday</div>
+    <div class="header">Wednesday</div>
+    <div class="header">Thursday</div>
+    <div class="header">Friday</div>
+
+    <!-- Time Slots and Empty Cells -->
+    @foreach (var time in TimeHelper.TimeList)
+    {
+    <div class="time-slot">@time</div>
+    <div class="empty" data-time="@time" data-group-id="" data-day="Monday"></div>
+    <div class="empty" data-time="@time" data-group-id="" data-day="Tuesday"></div>
+    <div class="empty" data-time="@time" data-group-id="" data-day="Wednesday"></div>
+    <div class="empty" data-time="@time" data-group-id="" data-day="Thursday"></div>
+    <div class="empty" data-time="@time" data-group-id="" data-day="Friday"></div>
+    }
+  </div>
+</div>
+<form id="assignGroupForm">
+  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+  
+  <button>Save</button>
+</form>
+
+<script>
+  const lessonListItems = document.querySelectorAll('.lesson-list li');
+  const scheduleCells = document.querySelectorAll('.schedule .empty');
+  const selectedGroups = []; // Array to store selected group objects
+
+  lessonListItems.forEach(item => {
+    item.addEventListener('click', function() {
+      const lessonName = item.getAttribute('data-lesson');
+      const groupId = item.getAttribute('data-id');
+
+      // Check if the group is already in the selectedGroups array
+      const existingGroupIndex = selectedGroups.findIndex(group => group.id === groupId);
+
+      if (existingGroupIndex === -1) {
+        // If the group is not in the array, add it
+        selectedGroups.push({
+          id: groupId,
+          name: lessonName,
+          schedule: []  // Initialize the schedule array
+        });
+
+        // Fetch the schedule for the selected group
+        fetch(`/GroupSchedules/Index?groupId=${groupId}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+
+            // Iterate over the fetched data and populate the schedule
+            data.forEach(groupSchedule => {
+              const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+              const lessonDay = dayNames[groupSchedule.dayOfWeek - 1];
+
+              // Find the matching schedule cell for the day and time
+              const scheduleCell = document.querySelector(`.schedule .empty[data-day="${lessonDay}"][data-time="${groupSchedule.classTime}"]`);
+              if (scheduleCell) {
+                scheduleCell.classList.remove('empty');
+                scheduleCell.classList.add('lesson');
+                scheduleCell.textContent = lessonName;
+
+                // Store the schedule information in the selectedGroups array
+                const group = selectedGroups.find(g => g.id === groupId);
+                group.schedule.push({
+                  time: groupSchedule.classTime,
+                  day: lessonDay,
+                  lessonName: lessonName
+                });
+
+                // Optionally set data attributes (if needed)
+                scheduleCell.setAttribute('data-group-id', groupId);
+                scheduleCell.setAttribute('data-lesson-name', lessonName);
+              }
+            });
+          })
+          .catch(error => console.error('Error fetching schedule data:', error));
+      } else {
+        // If the group is already selected, remove it from the schedule
+        const groupToRemove = selectedGroups[existingGroupIndex];
+
+        // Remove the group from the array
+        selectedGroups.splice(existingGroupIndex, 1);
+
+        // Remove the group's lessons from the schedule
+        groupToRemove.schedule.forEach(groupSchedule => {
+          const lessonDay = groupSchedule.day;
+          const scheduleCell = document.querySelector(`.schedule .lesson[data-day="${lessonDay}"][data-time="${groupSchedule.time}"]`);
+          if (scheduleCell) {
+            scheduleCell.classList.remove('lesson');
+            scheduleCell.classList.add('empty');
+            scheduleCell.textContent = '';  // Clear the text content
+            scheduleCell.removeAttribute('data-group-id');
+            scheduleCell.removeAttribute('data-lesson-name');
+          }
+        });
+      }
+    });
+  });
+
+  // On form submit, send the selected group objects as an array of objects
+  document.getElementById('assignGroupForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from submitting normally
+
+    // Prepare the array of group objects to be sent
+    const groupData = selectedGroups.map(group => ({
+      GroupId: group.id,
+    }));
+
+    console.log(groupData); // Check the array of group objects
+
+    // Send the group data via POST request
+    fetch('/Students/AssignGroup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(groupData) // Send the entire array of group objects as JSON
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Successfully saved');
+        } else {
+          @*alert(response.statusText);*@
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert(error);
+      });
+  });
+</script>
+
+
+</body>

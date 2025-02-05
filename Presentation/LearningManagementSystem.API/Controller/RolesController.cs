@@ -1,11 +1,14 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.Role;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.Role;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearningManagementSystem.API.Controller;
-
+[ApiController]
+[Route("api/[controller]")]
 public class RolesController(IRoleService _roleService) : ControllerBase
 {
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilter<RoleRequest>))]
     public async Task<IActionResult> Post(RoleRequest request)
     {
         var response = await _roleService.CreateAsync(request); 
@@ -17,7 +20,8 @@ public class RolesController(IRoleService _roleService) : ControllerBase
         var response = await _roleService.GetAllAsync(); 
         return Ok(response);
     }
-    [HttpGet("id")]
+    [HttpGet("{id}")]
+    [ServiceFilter(typeof(RoleExistFilter))]
     public async Task<IActionResult> Get(string id)
     {
         var response = await _roleService.GetAsync(id); 

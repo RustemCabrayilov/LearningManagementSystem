@@ -1,10 +1,8 @@
 ﻿namespace LearningManagementSystem.Application.Abstractions.Services.Vote;
 
-public class VoteResponse(
+public record VoteResponse(
     Guid Id,
-    string Description,
     int Point,
-    Domain.Entities.Survey Survey,
-    Domain.Entities.Teacher Teacher,
+    Domain.Entities.Question Question,
     Domain.Entities.Student Student
 );

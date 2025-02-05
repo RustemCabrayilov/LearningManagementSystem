@@ -1,0 +1,41 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.Term.TermRequest
+
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <form class="forms-sample" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name">Name</label>
+                    <input asp-for="Name" type="text" class="form-control" id="Name" placeholder="Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartDate">Start Date</label>
+                    <input asp-for="StartDate" type="date" class="form-control" id="StartDate" placeholder="Start Date">
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate">End Date</label>
+                    <input asp-for="EndDate" type="date" class="form-control" id="EndDate" placeholder="End Date">
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IsActive">Is Active</label>
+                    <input asp-for="IsActive" type="checkbox" class="form-control" id="IsActive" placeholder="Is Active">
+                    <span asp-validation-for="IsActive" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TermSeason" class="control-label">Position Type</label>
+                    <select asp-for="TermSeason" class="form-control" asp-items="@(new SelectList(ViewBag.Terms))">
+                        <option value="">Please select one</option> <!-- Default option -->
+                    </select>
+                    <span asp-validation-for="TermSeason" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                <button class="btn btn-light" asp-action="Index">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>

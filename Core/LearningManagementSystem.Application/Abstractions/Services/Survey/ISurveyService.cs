@@ -9,4 +9,5 @@ public interface ISurveyService
     Task<SurveyResponse> RemoveAsync(Guid id);
     Task<SurveyResponse> GetAsync(Guid id);
     Task<IList<SurveyResponse>> GetAllAsync(RequestFilter? filter);
+    Task<SurveyResponse> Activate(Guid id);
 }

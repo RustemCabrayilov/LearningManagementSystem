@@ -1,0 +1,37 @@
+﻿@using LearningManagementSystem.Persistence.Filters
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Exam.ExamResponse>
+
+@{
+    ViewBag.Title = "Faculty List";
+}
+<a class="btn btn-primary" asp-action="Create">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Max Point</th>
+        <th>Exam Type</th>
+        <th>Assign Points</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.StartDate</td>
+            <td>@item.EndDate</td>
+            <td>@item.MaxPoint</td>
+            <td>@item.ExamType</td>
+            <td>
+                <a  asp-controller="Students" asp-action="AssignPoint" asp-route-examId="@item.Id">
+                    Assign Points
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

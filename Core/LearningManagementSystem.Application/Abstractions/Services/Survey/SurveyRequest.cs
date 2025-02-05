@@ -5,5 +5,7 @@ namespace LearningManagementSystem.Application.Abstractions.Services.Survey;
 
 public record SurveyRequest(
     string Name,
-    Guid TermId
+    bool IsActive,
+    Guid TermId,
+    Guid TeacherId
 );

@@ -1,0 +1,105 @@
+﻿<style>
+  /* Add some basic styling for the search results */
+  .search-results {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  .search-result-item {
+    display: block;
+    padding: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+  }
+
+  .search-result-item:hover {
+    background-color: #f1f1f1;
+    color: #007bff;
+  }
+</style>
+
+
+<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+  <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
+    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+      <span class="mdi mdi-menu"></span>
+    </button>
+
+    <div class="search-field d-none d-md-block">
+      <form class="d-flex align-items-center h-100" action="#">
+        <div class="input-group">
+          <div class="input-group-prepend bg-transparent">
+            <i class="input-group-text border-0 mdi mdi-magnify"></i>
+          </div>
+          <input id="search-input" type="text" class="form-control bg-transparent border-0" placeholder="Search projects">
+        </div>
+      </form>
+      <div id="search-results" class="search-results d-none">
+        <!-- Search results will be populated here -->
+      </div> <!-- Results container -->
+    </div>
+
+    <ul class="navbar-nav navbar-nav-right">
+      <!-- Your existing navbar items here -->
+    </ul>
+
+    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+      <span class="mdi mdi-menu"></span>
+    </button>
+  </div>
+</nav>
+@await Component.InvokeAsync("NToastNotify")
+
+<script>
+  // JavaScript to handle the input change, make an API request, and show suggestions
+
+  document.getElementById('search-input').addEventListener('input', function() {
+    const value = this.value.trim();
+
+    // If the input is empty, hide the results
+    if (value.length === 0) {
+      document.getElementById('search-results').classList.add('d-none');
+      return;
+    }
+
+    // Make the API request (replace with your actual API endpoint)
+    fetch(`/Admin/Elastic/Search?value=${value}`)
+      .then(response => response.json())
+      .then(data => {
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = ''; // Clear previous results
+
+        // If there are results, display them
+        if (data?.results && data?.results.length > 0) {
+          resultsContainer.classList.remove('d-none');
+          data?.results.forEach(result => {
+            // Create an anchor tag for each result
+            const resultDiv = document.createElement('a');
+            resultDiv.classList.add('search-result-item');
+            console.log(result)
+            resultDiv.href = `/Users/Details?userId=${result?.id}`;  // Assume userId is in the result
+            resultDiv.textContent = result?.userName===""?result?.errorMessage:result?.userName; // Use the appropriate field
+            resultsContainer.appendChild(resultDiv);
+          });
+        } else {
+          resultsContainer.classList.add('d-none'); // Hide if no results
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching search results:', error);
+        document.getElementById('search-results').classList.add('d-none');
+      });
+  });
+</script>
+

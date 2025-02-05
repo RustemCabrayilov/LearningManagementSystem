@@ -9,5 +9,6 @@ public interface IGroupService
     Task<GroupResponse> RemoveAsync(Guid id);
     Task<GroupResponse> GetAsync(Guid id);
     Task<IList<GroupResponse>> GetAllAsync(RequestFilter? filter);
-    Task<GroupResponse> AssignExamAsync(ExamGroupDto dto);
+    Task<GroupResponse> Activate(Guid id);
+
 }

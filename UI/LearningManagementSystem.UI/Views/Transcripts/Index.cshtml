@@ -1,0 +1,25 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Transcript.TranscriptResponse>
+
+@{
+ViewBag.Title = "Faculty List";
+}
+<a class="btn btn-primary" asp-action="Create">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Group</th>
+        <th>Credit</th>
+        <th>Point </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@item.Group.Name</td>
+        <td>@item.Group.Credit</td>
+        <td>@item.TotalPoint</td>
+    </tr>
+    }
+    </tbody>
+</table>

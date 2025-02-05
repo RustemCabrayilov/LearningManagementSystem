@@ -1,0 +1,58 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Survey.SurveyResponse>
+<link rel="stylesheet" href="~/css/togglebtn.css">
+@{
+    ViewBag.Title = "Faculty List";
+}
+<a class="btn btn-primary" asp-action="Create">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Active</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.IsActive</td>
+            <td>
+                <a class="btn btn-warning" asp-area="admin" asp-controller="Faculties" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="far fa-pen-to-square"></i>
+                </a>
+            </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                    <i class="fas fa-trash-can"></i>
+                </button>
+                @await Html.PartialAsync("_Delete",item)
+            </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id">
+                    Details
+                </button>
+                @await Html.PartialAsync("_Details",item)
+            </td>
+            <td>
+                <!-- Toggle Button for Active (Boolean) value -->
+
+
+                <label class="switch">
+                    <a asp-area="Admin" asp-controller="Surveys" asp-action="ActivateSurvey" asp-route-id="@item.Id">
+                        <input type="checkbox" class="toggle-btn" @(item.IsActive ? "checked" : "") data-id="@item.Id"/>
+                        <span class="slider round"></span>
+                    </a>
+                </label>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<partial name="_Pagination"/>

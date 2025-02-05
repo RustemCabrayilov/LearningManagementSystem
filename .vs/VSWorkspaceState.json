@@ -1,8 +1,14 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Infrastructure"
+    "\\Infrastructure",
+    "\\UI",
+    "\\UI\\LearningManagementSystem.UI",
+    "\\UI\\LearningManagementSystem.UI\\Areas",
+    "\\UI\\LearningManagementSystem.UI\\Areas\\Admin",
+    "\\UI\\LearningManagementSystem.UI\\Areas\\Admin\\Views",
+    "\\UI\\LearningManagementSystem.UI\\Areas\\Admin\\Views\\Faculties"
   ],
-  "SelectedNode": "\\LearningManagementSystem.sln",
+  "SelectedNode": "\\Infrastructure",
   "PreviewInSolutionExplorer": false
 }

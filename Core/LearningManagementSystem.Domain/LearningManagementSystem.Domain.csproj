@@ -8,13 +8,17 @@
 
     <ItemGroup>
       <Compile Remove="Class1.cs" />
-      <Compile Remove="Entities\Transcript.cs" />
-      <Compile Remove="Entities\Attendance.cs" />
       <Compile Remove="Entities\CompleteExam.cs" />
       <Compile Remove="Entities\Schedule.cs" />
       <Compile Remove="Entities\ScheduleLesson.cs" />
       <Compile Remove="Entities\StudentSchedule.cs" />
       <Compile Remove="Enums\CandidateType.cs" />
+      <Compile Remove="Configurations\ExamGroupConfiguration.cs" />
+      <Compile Remove="Entities\TeacherSurvey.cs" />
+      <Compile Remove="Configurations\UserConfiguration.cs" />
+      <Compile Remove="Entities\TeacherGroup.cs" />
+      <Compile Remove="Entities\GroupExam.cs" />
+      <Compile Remove="Entities\Common\Activation.cs" />
     </ItemGroup>
 
     <ItemGroup>

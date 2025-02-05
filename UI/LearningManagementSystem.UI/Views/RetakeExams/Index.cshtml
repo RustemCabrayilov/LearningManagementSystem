@@ -1,0 +1,27 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.RetakeExam.RetakeExamResponse>
+
+@{
+    ViewBag.Title = "Faculty List";
+}
+<a class="btn btn-primary" asp-action="Create">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Exam Type</th>
+        <th>Retake Exam Type</th>
+        <th>Deadline</th>
+        <th>Apply</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Exam.ExamType</td>
+            <td>@item.RetakeExamType</td>
+            <td>@item.Deadline</td>
+            <td><a asp-controller="Students" asp-action="AssignRetakeExam" asp-route-id="@item.Id">Apply</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

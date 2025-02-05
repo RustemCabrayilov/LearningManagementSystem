@@ -32,3 +32,4 @@ C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\Learn
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\LearningManagementSystem.BLL\obj\Debug\net8.0\refint\LearningManagementSystem.BLL.dll
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\LearningManagementSystem.BLL\obj\Debug\net8.0\LearningManagementSystem.BLL.pdb
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\LearningManagementSystem.BLL\obj\Debug\net8.0\ref\LearningManagementSystem.BLL.dll
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\LearningManagementSystem.BLL\obj\Debug\net8.0\LearningManagementSystem.BLL.sourcelink.json

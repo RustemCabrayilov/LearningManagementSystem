@@ -9,4 +9,6 @@ public interface ITermService
     Task<TermResponse> RemoveAsync(Guid id);
     Task<TermResponse> GetAsync(Guid id);
     Task<IList<TermResponse>> GetAllAsync(RequestFilter? filter);
+    Task<TermResponse> Activate(Guid id);
+
 }

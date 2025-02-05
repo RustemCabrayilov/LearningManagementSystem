@@ -1,0 +1,36 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.Document.DocumentResponse
+
+@{
+    ViewBag.Title = "Document View";
+    Layout = "_Layout";
+}
+
+<style>
+    /* Make iframe responsive */
+    .document-iframe {
+        width: 100%;             /* Full width */
+        height: 100vh;           /* Full height of the viewport */
+        border: none;            /* No border */
+        max-width: 100%;         /* Prevents the iframe from stretching beyond its container */
+        margin: 0 auto;          /* Centers the iframe horizontally */
+    }
+
+    /* You can add additional styling for container */
+    .iframe-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        height: 100%;           /* Ensure the container takes up the full height */
+        width: 100%;            /* Ensure the container takes up the full width */
+    }
+</style>
+
+<!-- Container that holds the iframe for alignment and responsiveness -->
+<div class="iframe-container">
+    <iframe
+        src='@Url.Action("GetFile", "Documents", new { id = Model.OwnerId })'
+        class="document-iframe"
+    ></iframe>
+</div>

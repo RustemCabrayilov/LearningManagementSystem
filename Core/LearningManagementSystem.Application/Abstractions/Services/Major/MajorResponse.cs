@@ -1,11 +1,13 @@
-﻿namespace LearningManagementSystem.Application.Abstractions.Services.Major;
+﻿using LearningManagementSystem.Application.Abstractions.Services.Faculty;
+
+namespace LearningManagementSystem.Application.Abstractions.Services.Major;
 
 public record MajorResponse(
     Guid Id,
-    string Name,
+    string Title,
     float Point,
     string EducationLanguage,
     decimal TuitionFee,
-    decimal StateFunded,
-    Domain.Entities.Faculty Faculty
+    bool StateFunded,
+    FacultyResponse Faculty
 );

@@ -1,0 +1,30 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.StudentExam.StudentExamResponse
+
+
+<!-- Modal -->
+<div class="modal fade" id="uploadFile-@Model.Id" tabindex="-1" aria-labelledby="uploadFile-@Model.Id" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadFile-@Model.Id">Upload File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>@Model.Point</p>
+                <p>@Model.Student.Name</p>
+                <form asp-controller="Documents" asp-action="CreateExamDocument" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input hidden name="ownerId" type="text" class="form-control" value="@Model.Id" placeholder="Id">
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label">Files</label>
+                        <input name="files" type="file" class="form-control" multiple required/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

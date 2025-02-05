@@ -1,0 +1,40 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.Attendance.AttendanceResponse[]
+
+@{
+ViewBag.Title = "Check Attendances";
+Layout = "_Layout";
+}
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <form class="forms-sample" asp-action="AssignPoint" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @for (int i = 0; i < Model.Length; i++)
+                {
+                    <div class="row justify-content-between align-items-center">
+                        <div class="form-group col-2">
+                            <input readonly name="attendances[@i].Student.Id" type="text" class="form-control" value="@Model[i].Student.Id" placeholder="Id">
+                            <input hidden name="attendances[@i].Lesson.Id" type="text" class="form-control" value="@Model[i].Lesson.Id" placeholder="Id">
+                            <input hidden name="attendances[@i].Id" type="text" class="form-control" value="@Model[i].Id" placeholder="Id">
+                        </div>
+                        <div class="form-group col-3">
+                            <input readonly name="attendances[@i].Student.Name" type="text" class="form-control" value="@Model[i].Student.Name" placeholder="Name">
+                        </div>
+                        <div class="form-group col-3">
+                            <input readonly name="attendances[@i].Student.Surname" type="text" class="form-control" value="@Model[i].Student.Surname" placeholder="Surname">
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="Absence">Absence</label>
+                            <input name="attendances[@i].Absence" type="checkbox"  class="form-control" value="@Model[i].Absence" placeholder="Absence">
+                            @*<span asp-validation-for="studentExams[@i].Point" class="text-danger"></span>*@
+                        </div>
+                    </div>
+                }
+                <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                <button class="btn btn-light" asp-action="Index">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>

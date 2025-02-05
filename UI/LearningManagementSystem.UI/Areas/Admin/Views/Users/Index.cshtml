@@ -1,0 +1,56 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.User.UserResponse>
+
+@{
+    ViewBag.Title = "title";
+}
+<a class="btn btn-primary" asp-action="Create">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Roles</th>
+        <th>Assign Role</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@(string.IsNullOrEmpty(item.UserName) ? "No Username" : item.UserName)</td>
+            <td>@(string.IsNullOrEmpty(item.Email) ? "No Email" : item.Email)</td>
+            <td>@(string.IsNullOrEmpty(item.PhoneNumber) ? "No Phone" : item.PhoneNumber)</td>  
+            <td>
+                @foreach (var role in item.Roles)
+                {
+                    <span>@role ,</span>
+                }
+            </td>
+            @*<td><label class="badge badge-danger">Pending</label></td>*@
+            <td>
+                <a class="btn btn-primary" asp-area="admin" asp-controller="Users" asp-action="AssignRole" asp-route-id="@item.Id">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-warning" asp-area="admin" asp-controller="Users" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="far fa-pen-to-square"></i>
+                </a>
+            </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                    <i class="fas fa-trash-can"></i>
+                </button>
+                @await Html.PartialAsync("_Delete", item)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<partial name="_Pagination"/>

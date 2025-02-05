@@ -6,7 +6,7 @@ public class DeanMappingProfile:Profile
 {
     public DeanMappingProfile()
     {
-        CreateMap<DeanRequest, Domain.Entities.Teacher>();
-        CreateMap<Domain.Entities.Teacher, DeanResponse>();
+        CreateMap<DeanRequest, Domain.Entities.Dean>();
+        CreateMap<Domain.Entities.Dean, DeanResponse>();
     }
 }

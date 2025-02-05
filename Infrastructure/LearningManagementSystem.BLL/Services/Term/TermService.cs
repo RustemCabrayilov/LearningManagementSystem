@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LearningManagementSystem.Application.Abstractions.Repository;
 using LearningManagementSystem.Application.Abstractions.Services.Group;
+using LearningManagementSystem.Application.Abstractions.Services.Redis;
 using LearningManagementSystem.Application.Abstractions.Services.Term;
 using LearningManagementSystem.Application.Abstractions.UnitOfWork;
 using LearningManagementSystem.Application.Exceptions;
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningManagementSystem.BLL.Services.Term;
 
-public class TermService(IGenericRepository<Domain.Entities.Term> _termRepository,
+public class TermService(
+    IGenericRepository<Domain.Entities.Term> _termRepository,
+    IRedisCachingService _redisCachingService,
     IMapper _mapper,
-    IUnitOfWork _unitOfWork):ITermService
+    IUnitOfWork _unitOfWork) : ITermService
 {
     public async Task<TermResponse> CreateAsync(TermRequest dto)
     {
@@ -25,8 +28,9 @@ public class TermService(IGenericRepository<Domain.Entities.Term> _termRepositor
     {
         var entity = await _termRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Term not found");
-        await _termRepository.AddAsync(entity);
-        await _unitOfWork.SaveChangesAsync();
+        _mapper.Map(dto, entity);
+        _termRepository.Update(entity);
+        _unitOfWork.SaveChanges();
         return _mapper.Map<TermResponse>(entity);
     }
 
@@ -41,14 +45,29 @@ public class TermService(IGenericRepository<Domain.Entities.Term> _termRepositor
 
     public async Task<TermResponse> GetAsync(Guid id)
     {
-        var entity = await _termRepository.GetAsync(x=>x.Id==id&&!x.IsDeleted);
-        if(entity is null) throw new NotFoundException("Term not found");
-        return _mapper.Map<TermResponse>(entity);
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<TermResponse>(key);
+        if (data is not null)
+            return data;
+        var entity = await _termRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
+        if (entity is null) throw new NotFoundException("Term not found");
+        var outDto = _mapper.Map<TermResponse>(entity);
+        _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<IList<TermResponse>> GetAllAsync(RequestFilter? filter)
     {
-        var entities =await _termRepository.GetAll(x=>!x.IsDeleted,filter).ToListAsync();
+        var entities = await _termRepository.GetAll(x => !x.IsDeleted, filter).ToListAsync();
         return _mapper.Map<IList<TermResponse>>(entities);
-    }   
+    }
+
+    public async Task<TermResponse> Activate(Guid id)
+    {
+        var entity = await _termRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
+        entity.IsActive = !entity.IsActive;
+        _termRepository.Update(entity);
+        _unitOfWork.SaveChanges();
+        return _mapper.Map<TermResponse>(entity);
+    }
 }

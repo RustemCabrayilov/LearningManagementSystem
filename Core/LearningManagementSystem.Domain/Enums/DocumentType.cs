@@ -6,5 +6,8 @@ public enum DocumentType
 {
     Dean,
     Student,
-    Teacher
+    Teacher,
+    StudentExam,
+    RetakeExam,
+    Theme
 }

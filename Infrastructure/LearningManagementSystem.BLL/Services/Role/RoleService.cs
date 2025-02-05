@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LearningManagementSystem.Application.Abstractions.Services.Redis;
 using LearningManagementSystem.Application.Abstractions.Services.Role;
 using LearningManagementSystem.Application.Abstractions.UnitOfWork;
 using LearningManagementSystem.Application.Exceptions;
@@ -8,13 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningManagementSystem.BLL.Services.Role;
 
-public class RoleService(RoleManager<AppRole> _roleManager,
+public class RoleService(
+    RoleManager<AppRole> _roleManager,
+    IRedisCachingService _redisCachingService,
     IMapper _mapper,
     IUnitOfWork _unitOfWork) : IRoleService
 {
     public async Task<RoleResponse> CreateAsync(RoleRequest dto)
     {
         var entity = _mapper.Map<AppRole>(dto);
+        entity.Id = Guid.NewGuid().ToString();
         await _roleManager.CreateAsync(entity);
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<RoleResponse>(entity);
@@ -42,9 +46,15 @@ public class RoleService(RoleManager<AppRole> _roleManager,
 
     public async Task<RoleResponse> GetAsync(string id)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<RoleResponse>(key);
+        if (data is not null)
+            return data;
         var entity = await _roleManager.FindByIdAsync(id);
         if (entity is null) throw new NotFoundException("Role not found");
-        return _mapper.Map<RoleResponse>(entity);
+        var outDto = _mapper.Map<RoleResponse>(entity);
+        _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<IList<RoleResponse>> GetAllAsync()
@@ -52,5 +62,4 @@ public class RoleService(RoleManager<AppRole> _roleManager,
         var entities = await _roleManager.Roles.ToListAsync();
         return _mapper.Map<IList<RoleResponse>>(entities);
     }
-    
 }

@@ -7,8 +7,7 @@ public record TeacherRequest(
     string Surname,
     string Occupation,
     decimal Salary,
-    float Rate,
     string AppUserId,
-    Guid FacultyId,
+    string FacultyId,
     IFormFile File
 );

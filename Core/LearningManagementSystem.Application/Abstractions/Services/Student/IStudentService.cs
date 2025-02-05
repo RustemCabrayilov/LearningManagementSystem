@@ -1,5 +1,4 @@
-﻿using LearningManagementSystem.Application.Abstractions.Student;
-using LearningManagementSystem.Persistence.Filters;
+﻿using LearningManagementSystem.Persistence.Filters;
 
 namespace LearningManagementSystem.Application.Abstractions.Services.Student;
 
@@ -11,9 +10,9 @@ public interface IStudentService
     Task<StudentResponse> GetAsync(Guid id);
     Task<IList<StudentResponse>> GetAllAsync(RequestFilter? filter);
     Task<StudentResponse> AssignGroupAsync(StudentGroupDto dto);
-    Task<StudentResponse> AssignLessonAsync(StudentLessonDto dto);
     Task<StudentResponse> AssignMajorAsync(StudentMajorDto dto);
     Task<StudentResponse> AssignSubjectAsync(StudentSubjectDto dto);
     Task<StudentResponse> AssignExamAsync(StudentExamDto dto);
     Task<StudentResponse> AssignRetakeExamAsync(StudentRetakeExamDto dto);
+    Task<StudentGroupDto[]> AssignGroupsAsync(StudentGroupDto[] dtos);
 }

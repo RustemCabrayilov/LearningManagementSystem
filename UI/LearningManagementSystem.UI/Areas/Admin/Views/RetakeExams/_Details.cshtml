@@ -1,0 +1,22 @@
+﻿@model LearningManagementSystem.Application.Abstractions.Services.RetakeExam.RetakeExamResponse
+<!-- Modal -->
+<div class="modal fade" id="detailModal-@Model.Id" tabindex="-1" aria-labelledby="detailModalLabel-@Model.Id" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel-@Model.Id">Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>@Model.Exam.Group.Name</p>
+                <p>@Model.Exam.Group.Code</p>
+                <p>@Model.Exam.StartDate</p>
+                <p>@Model.Exam.EndDate</p>
+                <p>@Model.Exam.MaxPoint</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

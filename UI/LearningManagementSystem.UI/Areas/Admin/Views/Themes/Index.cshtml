@@ -1,0 +1,50 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Theme.ThemeResponse>
+<link rel="stylesheet" href="~/css/togglebtn.css">
+
+@{
+    ViewBag.Title = "title";
+}
+<a class="btn btn-primary" asp-action="Create" asp-controller="Themes">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Active</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>Activate</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Title</td>
+            <td>@item.IsActive</td>
+            @*<td><label class="badge badge-danger">Pending</label></td>*@
+            <td>
+                <a class="btn btn-warning" asp-area="admin" asp-controller="Terms" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="far fa-pen-to-square"></i>
+                </a>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                    <i class="fas fa-trash-can"></i>
+                </button>
+                @await Html.PartialAsync("_Delete",item)
+            </td>
+            <td>
+                <label class="switch">
+                    <a asp-area="Admin" asp-controller="Themes" asp-action="ActivateTheme" asp-route-id="@item.Id">
+                        <input type="checkbox" class="toggle-btn" @(item.IsActive ? "checked" : "") data-id="@item.Id"/>
+                        <span class="slider round"></span>
+                    </a>
+                </label>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<partial name="_Pagination"/>

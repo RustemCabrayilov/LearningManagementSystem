@@ -22,6 +22,39 @@ namespace LearningManagementSystem.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Attendance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Absence")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Attendances");
+                });
+
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Dean", b =>
                 {
                     b.Property<Guid>("Id")
@@ -50,9 +83,8 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Salary")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -90,6 +122,10 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("OriginName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -98,7 +134,6 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Path")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdateDate")
@@ -125,6 +160,9 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -134,45 +172,14 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("GroupId");
 
                     b.ToTable("Exam");
-                });
-
-            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.ExamGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ExamId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExamId");
-
-                    b.ToTable("ExamGroups");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Faculty", b =>
@@ -196,7 +203,7 @@ namespace LearningManagementSystem.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Faculty");
+                    b.ToTable("Faculties");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Group", b =>
@@ -205,6 +212,9 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("CanApply")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
@@ -212,11 +222,8 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DayOfWeek")
+                    b.Property<int>("Credit")
                         .HasColumnType("int");
-
-                    b.Property<TimeSpan>("EndDate")
-                        .HasColumnType("time");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -227,9 +234,6 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("StartDate")
-                        .HasColumnType("time");
 
                     b.Property<Guid>("SubjectId")
                         .HasColumnType("uniqueidentifier");
@@ -254,6 +258,38 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.HasIndex("TermId");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.GroupSchedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ClassTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("GroupSchedule");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Identity.AppRole", b =>
@@ -293,6 +329,9 @@ namespace LearningManagementSystem.Persistence.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConnectionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -357,14 +396,15 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("SubjectId")
                         .HasColumnType("uniqueidentifier");
@@ -392,7 +432,8 @@ namespace LearningManagementSystem.Persistence.Migrations
 
                     b.Property<string>("EducationLanguage")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<Guid>("FacultyId")
                         .HasColumnType("uniqueidentifier");
@@ -400,15 +441,15 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<float>("Point")
                         .HasColumnType("real");
 
-                    b.Property<decimal>("StateFunded")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<bool>("StateFunded")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TuitionFee")
                         .HasColumnType("decimal(18,2)");
@@ -421,6 +462,40 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.HasIndex("FacultyId");
 
                     b.ToTable("Majors");
+                });
+
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Question", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxPoint")
+                        .HasMaxLength(200)
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SurveyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.RetakeExam", b =>
@@ -483,7 +558,8 @@ namespace LearningManagementSystem.Persistence.Migrations
 
                     b.Property<string>("StudentNo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -533,26 +609,32 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.ToTable("StudentExams");
                 });
 
-            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.StudentLesson", b =>
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.StudentGroup", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Absence")
-                        .HasColumnType("bit");
+                    b.Property<int>("AbsenceCount")
+                        .HasColumnType("int");
 
-                    b.Property<bool>("Attendance")
-                        .HasColumnType("bit");
+                    b.Property<float>("ActivityPoint")
+                        .HasColumnType("real");
+
+                    b.Property<int>("AttendanceCount")
+                        .HasColumnType("int");
+
+                    b.Property<float>("AttendancePoint")
+                        .HasColumnType("real");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<Guid>("LessonId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
@@ -562,11 +644,11 @@ namespace LearningManagementSystem.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LessonId");
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentLessons");
+                    b.ToTable("StudentGroups");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.StudentMajor", b =>
@@ -605,16 +687,28 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("ApplyDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<float>("NewPoint")
+                        .HasColumnType("real");
+
                     b.Property<Guid>("RetakeExamId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TermId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdateDate")
@@ -625,6 +719,8 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.HasIndex("RetakeExamId");
 
                     b.HasIndex("StudentId");
+
+                    b.HasIndex("TermId");
 
                     b.ToTable("StudentRetakeExams");
                 });
@@ -648,6 +744,9 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("SubjectTakingType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalPoint")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateDate")
@@ -679,11 +778,13 @@ namespace LearningManagementSystem.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("SubjectCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -732,14 +833,22 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CandidateType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TermId")
                         .HasColumnType("uniqueidentifier");
@@ -748,6 +857,8 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
 
                     b.HasIndex("TermId");
 
@@ -805,36 +916,6 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.TeacherGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TeacherGroups");
-                });
-
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Term", b =>
                 {
                     b.Property<Guid>("Id")
@@ -847,8 +928,15 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
@@ -864,6 +952,71 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.ToTable("Terms");
                 });
 
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Theme", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Themes");
+                });
+
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Transcript", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ExamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<float>("TotalPoint")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExamId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Transcripts");
+                });
+
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Vote", b =>
                 {
                     b.Property<Guid>("Id")
@@ -873,23 +1026,19 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<int>("Point")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SurveyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TeacherId")
+                    b.Property<Guid?>("TeacherId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdateDate")
@@ -897,9 +1046,9 @@ namespace LearningManagementSystem.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("QuestionId");
 
-                    b.HasIndex("SurveyId");
+                    b.HasIndex("StudentId");
 
                     b.HasIndex("TeacherId");
 
@@ -1012,6 +1161,25 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Attendance", b =>
+                {
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Lesson", "Lesson")
+                        .WithMany("Attendances")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Student", "Student")
+                        .WithMany("Attendances")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Dean", b =>
                 {
                     b.HasOne("LearningManagementSystem.Domain.Entities.Identity.AppUser", "AppUser")
@@ -1033,30 +1201,11 @@ namespace LearningManagementSystem.Persistence.Migrations
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Exam", b =>
                 {
-                    b.HasOne("LearningManagementSystem.Domain.Entities.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId")
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Group", "Group")
+                        .WithMany("Exams")
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.ExamGroup", b =>
-                {
-                    b.HasOne("LearningManagementSystem.Domain.Entities.Exam", "Exam")
-                        .WithMany("ExamGroups")
-                        .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LearningManagementSystem.Domain.Entities.Group", "Group")
-                        .WithMany("ExamGroups")
-                        .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Exam");
 
                     b.Navigation("Group");
                 });
@@ -1096,6 +1245,17 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Navigation("Term");
                 });
 
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.GroupSchedule", b =>
+                {
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Group", "Group")
+                        .WithMany("GroupSchedules")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Lesson", b =>
                 {
                     b.HasOne("LearningManagementSystem.Domain.Entities.Group", "Group")
@@ -1120,6 +1280,17 @@ namespace LearningManagementSystem.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Faculty");
+                });
+
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Question", b =>
+                {
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Survey", "Survey")
+                        .WithMany("Questions")
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Survey");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.RetakeExam", b =>
@@ -1147,13 +1318,13 @@ namespace LearningManagementSystem.Persistence.Migrations
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.StudentExam", b =>
                 {
                     b.HasOne("LearningManagementSystem.Domain.Entities.Exam", "Exam")
-                        .WithMany()
+                        .WithMany("StudentExams")
                         .HasForeignKey("ExamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearningManagementSystem.Domain.Entities.Student", "Student")
-                        .WithMany("Results")
+                        .WithMany("StudentExams")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1163,21 +1334,21 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.StudentLesson", b =>
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.StudentGroup", b =>
                 {
-                    b.HasOne("LearningManagementSystem.Domain.Entities.Lesson", "Lesson")
-                        .WithMany("StudentLessons")
-                        .HasForeignKey("LessonId")
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearningManagementSystem.Domain.Entities.Student", "Student")
-                        .WithMany("StudentLessons")
+                        .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Lesson");
+                    b.Navigation("Group");
 
                     b.Navigation("Student");
                 });
@@ -1204,20 +1375,28 @@ namespace LearningManagementSystem.Persistence.Migrations
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.StudentRetakeExam", b =>
                 {
                     b.HasOne("LearningManagementSystem.Domain.Entities.RetakeExam", "RetakeExam")
-                        .WithMany()
+                        .WithMany("StudentRetakeExams")
                         .HasForeignKey("RetakeExamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("LearningManagementSystem.Domain.Entities.Student", "Student")
-                        .WithMany()
+                        .WithMany("StudentRetakeExams")
                         .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Term", "Term")
+                        .WithMany()
+                        .HasForeignKey("TermId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("RetakeExam");
 
                     b.Navigation("Student");
+
+                    b.Navigation("Term");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.StudentSubject", b =>
@@ -1260,11 +1439,19 @@ namespace LearningManagementSystem.Persistence.Migrations
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Survey", b =>
                 {
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Teacher", "Teacher")
+                        .WithMany("Surveys")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LearningManagementSystem.Domain.Entities.Term", "Term")
                         .WithMany()
                         .HasForeignKey("TermId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Teacher");
 
                     b.Navigation("Term");
                 });
@@ -1288,50 +1475,50 @@ namespace LearningManagementSystem.Persistence.Migrations
                     b.Navigation("Faculty");
                 });
 
-            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.TeacherGroup", b =>
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Transcript", b =>
                 {
-                    b.HasOne("LearningManagementSystem.Domain.Entities.Subject", "Group")
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Exam", null)
+                        .WithMany("Transcripts")
+                        .HasForeignKey("ExamId");
+
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Group", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LearningManagementSystem.Domain.Entities.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Student", "Student")
+                        .WithMany("Transcripts")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Group");
 
-                    b.Navigation("Teacher");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Vote", b =>
                 {
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LearningManagementSystem.Domain.Entities.Student", "Student")
                         .WithMany("Votes")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("LearningManagementSystem.Domain.Entities.Survey", "Survey")
+                    b.HasOne("LearningManagementSystem.Domain.Entities.Teacher", null)
                         .WithMany("Votes")
-                        .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeacherId");
 
-                    b.HasOne("LearningManagementSystem.Domain.Entities.Teacher", "Teacher")
-                        .WithMany("Votes")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Question");
 
                     b.Navigation("Student");
-
-                    b.Navigation("Survey");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1387,9 +1574,11 @@ namespace LearningManagementSystem.Persistence.Migrations
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Exam", b =>
                 {
-                    b.Navigation("ExamGroups");
-
                     b.Navigation("RetakeExams");
+
+                    b.Navigation("StudentExams");
+
+                    b.Navigation("Transcripts");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Faculty", b =>
@@ -1401,21 +1590,32 @@ namespace LearningManagementSystem.Persistence.Migrations
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Group", b =>
                 {
-                    b.Navigation("ExamGroups");
+                    b.Navigation("Exams");
+
+                    b.Navigation("GroupSchedules");
 
                     b.Navigation("Lessons");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Lesson", b =>
                 {
-                    b.Navigation("StudentLessons");
+                    b.Navigation("Attendances");
+                });
+
+            modelBuilder.Entity("LearningManagementSystem.Domain.Entities.RetakeExam", b =>
+                {
+                    b.Navigation("StudentRetakeExams");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Student", b =>
                 {
-                    b.Navigation("Results");
+                    b.Navigation("Attendances");
 
-                    b.Navigation("StudentLessons");
+                    b.Navigation("StudentExams");
+
+                    b.Navigation("StudentRetakeExams");
+
+                    b.Navigation("Transcripts");
 
                     b.Navigation("Votes");
                 });
@@ -1427,12 +1627,14 @@ namespace LearningManagementSystem.Persistence.Migrations
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Survey", b =>
                 {
-                    b.Navigation("Votes");
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("LearningManagementSystem.Domain.Entities.Teacher", b =>
                 {
                     b.Navigation("Groups");
+
+                    b.Navigation("Surveys");
 
                     b.Navigation("Votes");
                 });

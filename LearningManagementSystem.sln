@@ -18,10 +18,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.AP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4177DD5A-2EAE-4141-A879-F952D9D571FD}"
 	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.Persistence", "Infrastructure\LearningManagementSystem.Persistence\LearningManagementSystem.Persistence.csproj", "{F045258F-E360-4CAB-ACE7-D1E13C237A0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.UI", "UI\LearningManagementSystem.UI\LearningManagementSystem.UI.csproj", "{6F5A7536-C68D-4AEF-82BB-3AEB374B2F9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.Infrastructure", "Infrastructure\LearningManagementSystem.Infrastructure\LearningManagementSystem.Infrastructure.csproj", "{F3B2CD05-7E0E-44B3-9F78-AB976860CB2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningManagementSystem.SignalR", "Infrastructure\LearningManagementSystem.SignalR\LearningManagementSystem.SignalR.csproj", "{678AACEA-3661-482C-B8F5-C8711F84DE43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +41,9 @@ Global
 		{B635FDFD-8CC3-47F1-9BDB-DDF4BFD1535B} = {42B4E319-FBCA-4FCD-8464-A87B4FAE5A1B}
 		{E9291682-1540-4C40-9C6E-2AA3FEF461E0} = {3C5E5647-7250-4201-B38A-CAA07FA0AE28}
 		{F045258F-E360-4CAB-ACE7-D1E13C237A0B} = {42B4E319-FBCA-4FCD-8464-A87B4FAE5A1B}
+		{6F5A7536-C68D-4AEF-82BB-3AEB374B2F9B} = {DE48ECE3-0F5B-40A3-9CDB-F7F88A7B7180}
+		{F3B2CD05-7E0E-44B3-9F78-AB976860CB2C} = {42B4E319-FBCA-4FCD-8464-A87B4FAE5A1B}
+		{678AACEA-3661-482C-B8F5-C8711F84DE43} = {42B4E319-FBCA-4FCD-8464-A87B4FAE5A1B}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AE171D0A-D0FB-4739-B7A4-83DC282B5441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -56,5 +66,17 @@ Global
 		{F045258F-E360-4CAB-ACE7-D1E13C237A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F045258F-E360-4CAB-ACE7-D1E13C237A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F045258F-E360-4CAB-ACE7-D1E13C237A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5A7536-C68D-4AEF-82BB-3AEB374B2F9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5A7536-C68D-4AEF-82BB-3AEB374B2F9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5A7536-C68D-4AEF-82BB-3AEB374B2F9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5A7536-C68D-4AEF-82BB-3AEB374B2F9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3B2CD05-7E0E-44B3-9F78-AB976860CB2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3B2CD05-7E0E-44B3-9F78-AB976860CB2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3B2CD05-7E0E-44B3-9F78-AB976860CB2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3B2CD05-7E0E-44B3-9F78-AB976860CB2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{678AACEA-3661-482C-B8F5-C8711F84DE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{678AACEA-3661-482C-B8F5-C8711F84DE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{678AACEA-3661-482C-B8F5-C8711F84DE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{678AACEA-3661-482C-B8F5-C8711F84DE43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

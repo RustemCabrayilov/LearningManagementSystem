@@ -36,3 +36,4 @@ C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\Learn
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\LearningManagementSystem.Persistence\obj\Debug\net8.0\LearningManagementSystem.Persistence.pdb
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\LearningManagementSystem.Persistence\obj\Debug\net8.0\LearningManagementSystem.Persistence.genruntimeconfig.cache
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\LearningManagementSystem.Persistence\obj\Debug\net8.0\ref\LearningManagementSystem.Persistence.dll
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Infrastructure\LearningManagementSystem.Persistence\obj\Debug\net8.0\LearningManagementSystem.Persistence.sourcelink.json

@@ -4,12 +4,14 @@ using LearningManagementSystem.Domain.Enums;
 
 namespace LearningManagementSystem.Application.Abstractions.Services.Dean;
 
-public class DeanResponse(
+public record DeanResponse(
     Guid Id,
     string Name,
     string Surname,
-    string Salary,
+    decimal Salary,
     PositionType PositionType,
     FacultyResponse Faculty,
-    AppUser AppUser
+    AppUser AppUser,
+    string QrCodeUrl="",
+    string FileUrl=null
     );

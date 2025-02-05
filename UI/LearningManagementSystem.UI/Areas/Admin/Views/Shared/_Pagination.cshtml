@@ -1,0 +1,23 @@
+﻿@using LearningManagementSystem.Persistence.Filters
+<nav aria-label="..." class="mt-5 d-flex justify-content-center">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="@Url.Action("Index", new RequestFilter { Page = ViewBag.CurrentPage - 1 == 0 ? ViewBag.TotalPages : ViewBag.CurrentPage - 1 })">
+                Previous
+            </a>
+        </li>
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li class="page-item active">
+                <a class="page-link  @if (i == ViewBag.CurrentPage) { <text>active</text> }" href="@Url.Action("Index", new RequestFilter { Page = i })">
+                    @i
+                    <span class="sr-only">(current)</span>
+                </a>
+            </li>
+        }
+
+        <li class="page-item">
+            <a class="page-link" href="@Url.Action("Index", new RequestFilter { Page = ViewBag.CurrentPage >= ViewBag.TotalPages ? 1 : ViewBag.CurrentPage + 1 })">Next</a>
+        </li>
+    </ul>
+</nav>

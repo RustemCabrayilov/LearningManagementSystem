@@ -1,0 +1,51 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Dean.DeanResponse>
+
+@{
+    ViewBag.Title = "Faculty List";
+}
+<a class="btn btn-primary" asp-action="Create">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Salary</th>
+        <th>Position</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Surname</td>
+            <td>@item.Salary</td>
+            <td>@item.PositionType</td>
+            <td>
+                <a class="btn btn-warning" asp-area="admin" asp-controller="Deans" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="far fa-pen-to-square"></i>
+                </a>
+            </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                    <i class="fas fa-trash-can"></i>
+                </button>
+                @await Html.PartialAsync("_Delete",item)
+            </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-primary !important" data-bs-toggle="modal" data-bs-target="#qrCodeModal-@item.Id">
+                    <i class="fa-solid fa-qrcode"></i>
+                </button>
+                @await Html.PartialAsync("_QrCode",item)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<partial name="_Pagination"/>

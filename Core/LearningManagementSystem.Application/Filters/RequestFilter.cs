@@ -8,6 +8,10 @@ public class RequestFilter
         //Filtering
         public string? FilterField { get; set; }
         public string? FilterValue { get; set; }
+        public Guid? FilterGuidValue { get; set; }
+        public Enum? FilterEnumValue { get; set; }
+
+        public bool AllUsers { get; set; } = false;
 
 
         //Sorting parametrs

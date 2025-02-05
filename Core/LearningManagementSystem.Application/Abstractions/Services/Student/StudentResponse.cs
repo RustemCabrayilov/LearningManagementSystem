@@ -1,4 +1,7 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.Lesson;
+﻿using LearningManagementSystem.Application.Abstractions.Services.Group;
+using LearningManagementSystem.Application.Abstractions.Services.Lesson;
+using LearningManagementSystem.Application.Abstractions.Services.StudentExam;
+using LearningManagementSystem.Application.Abstractions.Services.StudentRetakeExam;
 using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Domain.Entities.Identity;
 
@@ -9,5 +12,9 @@ public record StudentResponse(
     string Name,
     string Surname,
     string StudentNo,
-    AppUser AppUser
-); 
+    AppUser AppUser,
+    string QrCodeUrl="",
+    string FileUrl=null,
+    IList<GroupResponse> Groups=null,
+    IList<StudentExamResponse> StudentExams=null,
+    IList<StudentRetakeExamResponse> StudentRetakeExams=null ); 

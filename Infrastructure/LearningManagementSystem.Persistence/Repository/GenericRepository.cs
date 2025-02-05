@@ -15,19 +15,27 @@ public class GenericRepository<T>(AppDbContext _dbContext): IGenericRepository<T
         var entityEntry = await _dbContext.AddAsync(entity);
         return entityEntry.State == EntityState.Added;
     }
-
+    public async ValueTask<bool> AddRangeAsync(List<T> datas)
+    {
+        await _dbSet.AddRangeAsync(datas);
+        return true;
+    }
     public bool Update(T entity)
     {
         var entityEntry = _dbSet.Update(entity);
         return entityEntry.State == EntityState.Modified;
     }
-
+    public  bool UpdateRange(List<T> datas)
+    {
+         _dbSet.UpdateRange(datas);
+        return true;
+    }
     public bool Remove(T entity)
     {
         var entityEntry =  _dbSet.Remove(entity);
         return entityEntry.State == EntityState.Deleted;
     }
-
+    
   
     public async Task<T> GetAsync(Expression<Func<T, bool>> predicate,string[] includes)
     {
@@ -49,11 +57,25 @@ public class GenericRepository<T>(AppDbContext _dbContext): IGenericRepository<T
             {
                 query = query.Where(e=>EF.Property<string>(e,filter.FilterField) == filter.FilterValue);
             }
+            else if (!string.IsNullOrEmpty(filter.FilterField) && Guid.Empty != filter.FilterGuidValue)
+            {
+                query = query.Where(e => EF.Property<Guid>(e, filter.FilterField) == filter.FilterGuidValue);
+
+            }
+            else if (!string.IsNullOrEmpty(filter.FilterField) && filter.FilterEnumValue!=null)
+            {
+                query = query.Where(e => EF.Property<Enum>(e, filter.FilterField) == filter.FilterEnumValue);
+
+            }
             if (!string.IsNullOrEmpty(filter.SortField))
             {
                 query = filter.IsDescending ? query.OrderByDescending(e => EF.Property<object>(e, filter.SortField)) : query.OrderBy(e => EF.Property<object>(e, filter.SortField));
             }
-            query = query.Skip((filter.Page - 1) * filter.Count).Take(filter.Count);
+
+            if (!filter.AllUsers)
+            {
+                query = query.Skip((filter.Page - 1) * filter.Count).Take(filter.Count);
+            }
         }
         return query;
     }

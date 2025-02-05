@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LearningManagementSystem.Application.Abstractions.Repository;
+using LearningManagementSystem.Application.Abstractions.Services.Redis;
 using LearningManagementSystem.Application.Abstractions.Services.Subject;
 using LearningManagementSystem.Application.Abstractions.UnitOfWork;
 using LearningManagementSystem.Application.Exceptions;
@@ -8,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningManagementSystem.BLL.Services.Subject;
 
-public class SubjectService(IGenericRepository<Domain.Entities.Subject> _subjectRepository,
+public class SubjectService(
+    IGenericRepository<Domain.Entities.Subject> _subjectRepository,
+    IRedisCachingService _redisCachingService,
     IMapper _mapper,
-    IUnitOfWork _unitOfWork):ISubjectService
+    IUnitOfWork _unitOfWork) : ISubjectService
 {
     public async Task<SubjectResponse> CreateAsync(SubjectRequest dto)
     {
@@ -24,8 +27,9 @@ public class SubjectService(IGenericRepository<Domain.Entities.Subject> _subject
     {
         var entity = await _subjectRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Subject not found");
-        await _subjectRepository.AddAsync(entity);
-        await _unitOfWork.SaveChangesAsync();
+        _mapper.Map(dto, entity);
+        _subjectRepository.Update(entity);
+        _unitOfWork.SaveChanges();
         return _mapper.Map<SubjectResponse>(entity);
     }
 
@@ -40,15 +44,20 @@ public class SubjectService(IGenericRepository<Domain.Entities.Subject> _subject
 
     public async Task<SubjectResponse> GetAsync(Guid id)
     {
-        var entity = await _subjectRepository.GetAsync(x=>x.Id==id&&!x.IsDeleted);
-        if(entity is null) throw new NotFoundException("Subject not found");
-        return _mapper.Map<SubjectResponse>(entity);
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<SubjectResponse>(key);
+        if (data is not null)
+            return data;
+        var entity = await _subjectRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
+        if (entity is null) throw new NotFoundException("Subject not found");
+        var outDto = _mapper.Map<SubjectResponse>(entity);
+        _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<IList<SubjectResponse>> GetAllAsync(RequestFilter? filter)
     {
-        var entities =await _subjectRepository.GetAll(x=>!x.IsDeleted,filter).ToListAsync();
+        var entities = await _subjectRepository.GetAll(x => !x.IsDeleted, filter).ToListAsync();
         return _mapper.Map<IList<SubjectResponse>>(entities);
-    }  
-    
+    }
 }

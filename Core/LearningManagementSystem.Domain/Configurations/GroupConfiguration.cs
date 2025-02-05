@@ -8,6 +8,5 @@ public class GroupConfiguration:IEntityTypeConfiguration<Group>
 {
     public void Configure(EntityTypeBuilder<Group> builder)
     {
-    
     }
 }

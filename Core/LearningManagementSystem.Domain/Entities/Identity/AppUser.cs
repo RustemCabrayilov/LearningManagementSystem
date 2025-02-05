@@ -4,7 +4,5 @@ namespace LearningManagementSystem.Domain.Entities.Identity;
 
 public class AppUser:IdentityUser<string>
 {
-    /*
-    public string LastIpAdress { get; set; }
-*/
+    public string? ConnectionId { get; set; }
 }

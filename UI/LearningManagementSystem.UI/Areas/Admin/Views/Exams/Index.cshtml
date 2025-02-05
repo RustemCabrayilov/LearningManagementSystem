@@ -1,0 +1,101 @@
+﻿@using LearningManagementSystem.Domain.Entities
+@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Exam.ExamResponse>
+
+@{
+    ViewBag.Title = "Faculty List";
+}
+<a class="btn btn-primary" asp-action="Create">Create</a>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Max Point</th>
+        <th>Exam Type</th>
+        <th>Details</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.StartDate</td>
+            <td>@item.EndDate</td>
+            <td>@item.MaxPoint</td>
+            <td>@item.ExamType</td>
+            <td>
+                <a class="btn btn-warning" asp-area="admin" asp-controller="Exams" asp-action="Edit" asp-route-id="@item.Id">
+                    <i class="far fa-pen-to-square"></i>
+                </a>
+            </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                    <i class="fas fa-trash-can"></i>
+                </button>
+                @await Html.PartialAsync("_Delete", item)
+            </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-exam-id="@item.Id">
+                    Details
+                </button>
+                @await Html.PartialAsync("_Details", item)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let examId = this.getAttribute('data-exam-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${studentId} .modal-body`);
+
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/Exams/Details?id=${examId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update modal content with fetched student details
+                        let content = `
+                                <h4>User Info</h4>
+                                <p><strong>Group Name:</strong> ${dataexam?.exam?.group.name}</p>
+                                <p><strong>Code:</strong> ${data.exam.group?.code}</p>
+                                <p><strong>Credit:</strong> ${data.exam.group?.credit}</p>
+                                
+                            `;
+                        if (data.exam.retakeExams && data.exam.retakeExams.length > 0) {
+                            content += `<h5>Retake Exams:</h5><ul>`;
+                            data.exam.retakeExams.forEach(retakeExam => {
+                                content += `<li>${retakeExam.name}</li>
+                                           <li>${retakeExam.deadline}</li>`;
+                            });
+                            content += `</ul>`;
+                        }
+                        // Check if there's a file URL and determine file type
+
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching student details:', error);
+                        modalBody.innerHTML = `<p>Error loading student details.</p>`;
+                    });
+            });
+        });
+    });
+</script>
+}
+    <partial name="_Pagination"/>

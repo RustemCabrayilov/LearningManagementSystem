@@ -42,14 +42,23 @@ namespace LearningManagementSystem.API
 
             app.UseHangfireDashboard();
             RecurringJob.AddOrUpdate<IBackgroundJobService>(
-                "test-job",
+                "recommend-teacher-job",
                 service => service.Recommendteacher(),
                 Cron.Minutely());
+            RecurringJob.AddOrUpdate<IBackgroundJobService>(
+                "average-of-student-job",
+                service => service.AveragOfStudent(),
+                Cron.Minutely());
+            RecurringJob.AddOrUpdate<IBackgroundJobService>(
+                "fail-notification-job",
+                service => service.FailNotification(),
+                "*/2 * * * *" // Runs every hour
+            );
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Documents")),
                 RequestPath = "/Documents"  // This sets the URL path for the documents
-            });
+            }); 
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseRouting();

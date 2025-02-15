@@ -29,10 +29,85 @@ ViewBag.Title = "Faculty List";
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
                 <i class="fas fa-trash-can"></i>
             </button>
-        @await Html.PartialAsync("_Delete",item)
+            @await Html.PartialAsync("_Delete",item)
+        </td>
+        <td>
+            <!-- Button to open modal -->
+            <button type="button" class="btn btn-primary details-btn" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-lesson-id="@item.Id">
+                Details
+            </button>
+            @await Html.PartialAsync("_Details", item)
         </td>
     </tr>
     }
     </tbody>
 </table>
 <partial name="_Pagination"/>
+
+
+
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let lessonId = this.getAttribute('data-lesson-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${lessonId} .modal-body`);
+                console.log(lessonId)
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/Faculties/Details?id=${lessonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let content = `<h4>Faculty Info</h4>`;
+
+                        // Safely check if majors are available
+                        if (data?.majors && data.majors.length > 0) {
+                            content += `<h5>Majors:</h5><ul>`;
+                            data.majors.forEach(major => {
+                                content += `
+                    <li><strong>Title:</strong> ${major?.title || 'N/A'}</li>
+                    <li><strong>Education Language:</strong> ${major?.educationLanguage || 'N/A'}</li>
+                    <li><strong>Point:</strong> ${major?.point || 'N/A'}</li>
+                    <li><strong>Tuition Fee:</strong> ${major?.tuitionFee || 'N/A'}</li>
+                `;
+                            });
+                            content += `</ul>`;
+                        } else {
+                            content += `<p>No majors available</p>`;
+                        }
+
+                        // Safely check if teachers are available
+                        if (data?.teachers && data.teachers.length > 0) {
+                            content += `<h5>Teachers:</h5><ul>`;
+                            data.teachers.forEach(teacher => {
+                                content += `
+                    <li><strong>Name:</strong> ${teacher?.name || 'N/A'}</li>
+                    <li><strong>Surname:</strong> ${teacher?.surname || 'N/A'}</li>
+                    <li><strong>Occupation:</strong> ${teacher?.occupation || 'N/A'}</li>
+                    <li><strong>Salary:</strong> ${teacher?.salary || 'N/A'}</li>
+                    <li><strong>Rate:</strong> ${teacher?.rate || 'N/A'}</li>
+                `;
+                            });
+                            content += `</ul>`;
+                        } else {
+                            content += `<p>No teachers available</p>`;
+                        }
+
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching details:', error);
+                        modalBody.innerHTML = `<p>Error loading details.</p>`;
+                    });
+            });
+        });
+    });
+</script>
+}

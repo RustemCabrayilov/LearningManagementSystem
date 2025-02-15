@@ -16,7 +16,6 @@ public class Teacher:Employee
     public Faculty Faculty { get; set; }
     public Guid FacultyId { get; set; }
     public List<Group> Groups { get; set; }
-    public List<Vote> Votes { get; set; }
     public List<Survey> Surveys { get; set; }
     
 }

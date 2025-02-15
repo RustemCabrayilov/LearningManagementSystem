@@ -23,7 +23,6 @@
       <Compile Remove="Class1.cs" />
       <Compile Remove="Context\MongoDbContext.cs" />
       <Compile Remove="Migrations\20250126090411_mig_27.Designer.cs" />
-      <Compile Remove="Migrations\AppDbContextModelSnapshot.cs" />
       <Compile Remove="Migrations\20250128132809_mig_1.cs" />
       <Compile Remove="Migrations\20250128132809_mig_1.Designer.cs" />
     </ItemGroup>

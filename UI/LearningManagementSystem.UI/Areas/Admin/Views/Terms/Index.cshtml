@@ -36,7 +36,14 @@
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
                     <i class="fas fa-trash-can"></i>
                 </button>
-                @await Html.PartialAsync("_Delete",item)
+                @await Html.PartialAsync("_Delete", item)
+            </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-primary details-btn" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-lesson-id="@item.Id">
+                    Details
+                </button>
+                @await Html.PartialAsync("_Details", item)
             </td>
             <td>
                 <!-- Toggle Button for Active (Boolean) value -->
@@ -54,3 +61,56 @@
     </tbody>
 </table>
 <partial name="_Pagination"/>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let lessonId = this.getAttribute('data-lesson-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${lessonId} .modal-body`);
+                console.log(lessonId)
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/Terms/Details?id=${lessonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        // Update modal content with fetched student details
+                        let content = ``;
+                        if (data?.groups && data?.groups.length > 0) {
+                            content += `<h5>Term's Groups :</h5><ul>`;
+                            data?.groups?.forEach(group => {
+                                          
+                                content += `
+                                         <li><strong>Name:</strong>${group?.name}</li>
+                                         <li><strong>Code:</strong>${group?.code}</li>
+                                        <li><strong>Credit:</strong>${group?.credit}</li>`
+                            });
+                            content += `</ul>`;
+                        }
+                         @*if (data?.surveys && data?.surveys.length > 0) {
+                            content += `<h5>Term's Surveys :</h5><ul>`;
+                            data?.groups?.forEach(group => {
+                                           <li><strong>Name:</strong>${survey?.name}</li>
+                                content += `<li><strong>Credit:</strong>${group?.credit}</li>
+`
+                            });
+                            content += `</ul>`;
+                        }*@
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching  details:', error);
+                        modalBody.innerHTML = `<p>Error loading  details.</p>`;
+                    });
+            });
+        });
+    });
+</script>
+}

@@ -427,3 +427,4 @@ C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Presentation\Learnin
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Presentation\LearningManagementSystem.API\bin\Debug\net8.0\System.IO.Hashing.dll
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Presentation\LearningManagementSystem.API\bin\Debug\net8.0\LearningManagementSystem.SignalR.dll
 C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Presentation\LearningManagementSystem.API\bin\Debug\net8.0\LearningManagementSystem.SignalR.pdb
+C:\Users\ASUS\Desktop\FinalProject\LearningManagementSystem\Presentation\LearningManagementSystem.API\bin\Debug\net8.0\Refit.dll

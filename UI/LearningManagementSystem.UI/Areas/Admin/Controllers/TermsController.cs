@@ -8,7 +8,7 @@ using Refit;
 
 namespace LearningManagementSystem.UI.Areas.Admin.Controllers;
 
-    [Area("admin")]
+    [Area("Admin")]
 public class TermsController(ILearningManagementSystem _learningManagementSystem) : Controller
 {
     public async Task<IActionResult> Index([FromQuery]RequestFilter? filter)
@@ -77,5 +77,11 @@ public class TermsController(ILearningManagementSystem _learningManagementSystem
     {
         var response = await _learningManagementSystem.ActivateTerm(id);
         return RedirectToAction("Index");
+    }
+    
+    public async Task<IActionResult> Details([FromQuery]Guid id)
+    {
+        var response = await _learningManagementSystem.GetTerm(id);
+        return Json(response);
     }
 }

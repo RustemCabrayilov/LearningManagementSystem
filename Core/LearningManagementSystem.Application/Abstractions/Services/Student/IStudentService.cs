@@ -1,4 +1,5 @@
-﻿using LearningManagementSystem.Persistence.Filters;
+﻿using LearningManagementSystem.Application.Abstractions.Services.StudentRetakeExam;
+using LearningManagementSystem.Persistence.Filters;
 
 namespace LearningManagementSystem.Application.Abstractions.Services.Student;
 
@@ -10,9 +11,8 @@ public interface IStudentService
     Task<StudentResponse> GetAsync(Guid id);
     Task<IList<StudentResponse>> GetAllAsync(RequestFilter? filter);
     Task<StudentResponse> AssignGroupAsync(StudentGroupDto dto);
-    Task<StudentResponse> AssignMajorAsync(StudentMajorDto dto);
     Task<StudentResponse> AssignSubjectAsync(StudentSubjectDto dto);
     Task<StudentResponse> AssignExamAsync(StudentExamDto dto);
-    Task<StudentResponse> AssignRetakeExamAsync(StudentRetakeExamDto dto);
+    Task<StudentRetakeExamResponse> AssignRetakeExamAsync(StudentRetakeExamDto dto);
     Task<StudentGroupDto[]> AssignGroupsAsync(StudentGroupDto[] dtos);
 }

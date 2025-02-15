@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using LearningManagementSystem.Application.Abstractions.Repository;
+using LearningManagementSystem.Application.Abstractions.Services.Question;
 using LearningManagementSystem.Application.Abstractions.Services.Redis;
+using LearningManagementSystem.Application.Abstractions.Services.Survey;
 using LearningManagementSystem.Application.Abstractions.Services.Vote;
 using LearningManagementSystem.Application.Abstractions.UnitOfWork;
 using LearningManagementSystem.Application.Exceptions;
@@ -70,12 +72,16 @@ public class VoteService(
 
     public async Task<VoteResponse> UpdateAsync(Guid id, VoteRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<VoteResponse>(key);
         var entity = await _voteRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Vote not found");
         _mapper.Map(dto, entity);
         _voteRepository.Update(entity);
         _unitOfWork.SaveChanges();
-        return _mapper.Map<VoteResponse>(entity);
+        var outDto=_mapper.Map<VoteResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<VoteResponse> RemoveAsync(Guid id)
@@ -102,7 +108,19 @@ public class VoteService(
 
     public async Task<IList<VoteResponse>> GetAllAsync(RequestFilter? filter)
     {
-        var entities = await _voteRepository.GetAll(x => !x.IsDeleted, filter).ToListAsync();
-        return _mapper.Map<IList<VoteResponse>>(entities);
+        var entities = await _voteRepository.GetAll(x => !x.IsDeleted, filter)
+            .Include(x=>x.Question)
+            .Include(x=>x.Survey)
+            .ToListAsync();
+        IList<VoteResponse> data = new List<VoteResponse>();
+        foreach (var entity in entities)
+        {
+            var question = await _questionRepository.GetAsync(x => x.Id == entity.QuestionId && !x.IsDeleted);
+            var survey = await _surveyRepository.GetAsync(x => x.Id == entity.SurveyId && !x.IsDeleted);
+            var questionResponse = _mapper.Map<QuestionResponse>(question);
+            var surveyResponse = _mapper.Map<SurveyResponse>(survey);
+            data.Add(new(entity.Id,entity.Point, questionResponse, null,surveyResponse));
+        }
+        return data;
     }
 }

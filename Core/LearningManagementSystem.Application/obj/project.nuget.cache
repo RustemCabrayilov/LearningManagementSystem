@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "E0ZM+sCbCiY=",
+  "dgSpecHash": "6pWcTJ6ZNNg=",
   "success": true,
   "projectFilePath": "C:\\Users\\ASUS\\Desktop\\FinalProject\\LearningManagementSystem\\Core\\LearningManagementSystem.Application\\LearningManagementSystem.Application.csproj",
   "expectedPackageFiles": [
@@ -27,6 +27,7 @@
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\ASUS\\.nuget\\packages\\refit\\8.0.0\\refit.8.0.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\system.text.encodings.web\\4.5.0\\system.text.encodings.web.4.5.0.nupkg.sha512"
   ],
   "logs": []

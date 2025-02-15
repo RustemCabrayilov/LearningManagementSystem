@@ -26,12 +26,16 @@ public class GroupScheduleService(
 
     public async Task<GroupScheduleResponse> UpdateAsync(Guid id, GroupScheduleRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<GroupScheduleResponse>(key);
         var entity = await _groupScheduleRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("GroupSchedule not found");
         _mapper.Map(dto, entity);
         _groupScheduleRepository.Update(entity);
         _unitOfWork.SaveChanges();
-        return _mapper.Map<GroupScheduleResponse>(entity);
+        var outDto= _mapper.Map<GroupScheduleResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<GroupScheduleResponse> RemoveAsync(Guid id)

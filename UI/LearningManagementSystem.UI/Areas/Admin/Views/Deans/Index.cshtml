@@ -35,17 +35,95 @@
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
                     <i class="fas fa-trash-can"></i>
                 </button>
-                @await Html.PartialAsync("_Delete",item)
+                @await Html.PartialAsync("_Delete", item)
             </td>
             <td>
                 <!-- Button to open modal -->
-                <button type="button" class="btn btn-primary !important" data-bs-toggle="modal" data-bs-target="#qrCodeModal-@item.Id">
-                    <i class="fa-solid fa-qrcode"></i>
+                <button type="button" class="btn btn-primary details-btn" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-exam-id="@item.Id">
+                    Details
                 </button>
-                @await Html.PartialAsync("_QrCode",item)
+                @await Html.PartialAsync("_Details", item)
             </td>
         </tr>
     }
     </tbody>
 </table>
 <partial name="_Pagination"/>
+
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let lessonId = this.getAttribute('data-lesson-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${lessonId} .modal-body`);
+                console.log(lessonId)
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/Deans/Details?id=${lessonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update modal content with fetched student details
+                        let content = `
+                                <h4>Dean Info</h4>
+                                <p><strong>Name:</strong> ${data?.name}</p>
+                                <p><strong>Surname:</strong> ${data?.surname}</p>
+                                <p><strong>Salary:</strong> ${data?.salary}</p>
+                                <p><strong>Position:</strong> ${data?.positionType}</p>
+                                <p><strong>Faculty:</strong> ${data?.faculty?.name}</p>
+                                <p><strong>Phone:</strong> ${data?.appUser?.phoneNumber}</p>
+                                <p><strong>Username:</strong> ${data?.appUser?.userName}</p>
+                            `;
+                        // Check if there's a file URL and determine file type
+                        if (data.fileUrl && data.fileUrl.length > 0) {
+                            let fileUrl = data.fileUrl; // Ensure this is the correct file URL
+                            let fileName = data.fileName;
+                            let fileExtension = fileName.split('.').pop().toLowerCase();
+                            let fileContent = '';
+
+                            // If file is PDF
+                            if (fileExtension === 'pdf') {
+                                fileContent = `
+                                        <div style="width: 100%; height: 500px; overflow: hidden;">
+                                            <iframe src="${fileUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
+                                        </div>
+                                    `;
+                            }
+                            // If file is an image
+                            else if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(fileExtension)) {
+                                fileContent = `
+                                    <div style="width: 100%; text-align: center; margin-top: 20px;">
+    <div style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px; padding: 10px; background-color: #f9f9f9;">
+        <img src="${fileUrl}" alt="Student Image" style="width: 60%; height: 60%; border-radius: 4px;">
+    </div>
+   
+</div>
+
+                                    `;
+                            } else {
+                                fileContent = `<p>Unsupported file type.</p>`;
+                            }
+
+                            // Add file content to modal
+                            content += fileContent;
+                        } else {
+                            content += `<p>No file available for this dean.</p>`;
+                        }
+
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching student details:', error);
+                        modalBody.innerHTML = `<p>Error loading  details.</p>`;
+                    });
+            });
+        });
+    });
+</script>
+}

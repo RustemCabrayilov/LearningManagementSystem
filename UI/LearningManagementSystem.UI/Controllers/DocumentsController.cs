@@ -1,4 +1,5 @@
-﻿using LearningManagementSystem.Domain.Enums;
+﻿using LearningManagementSystem.Application.Abstractions.Services.Document;
+using LearningManagementSystem.Domain.Enums;
 using LearningManagementSystem.UI.Integrations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
@@ -14,21 +15,25 @@ public class DocumentsController(ILearningManagementSystem _learningManagementSy
         var response = await _learningManagementSystem.GetFile(id);
         return View(response);
     }
-    
 
-    public async Task<IActionResult> CreateExamDocument(List<IFormFile> files, Guid ownerId)
+    /*public async Task<IActionResult> CreateExamDocument(Guid ownerId,string documentType)
+    {
+        var documentByOwner = new DocumentByOwner(null,ownerId.ToString(),documentType=="StudentExam"?DocumentType.StudentExam:DocumentType.RetakeExam);
+        return View(documentByOwner);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateExamDocument(IFormFile[] files, string ownerId, string documentType)
     {
         try
         {
             var streamParts = new List<StreamPart>();
-            var request = await _learningManagementSystem.GetStudentExam(ownerId);
             foreach (var file in files)
             {
                 var fileName = Path.GetFileName(file.FileName);
                 // Use ASP.NET Core to get MIME type
                 var provider = new FileExtensionContentTypeProvider();
                 provider.TryGetContentType(fileName, out var mimeType);
-
                 if (mimeType == null)
                 {
                     // If MIME type could not be determined, set a default type
@@ -38,11 +43,10 @@ public class DocumentsController(ILearningManagementSystem _learningManagementSy
                 var fileStream = file.OpenReadStream();
                 streamParts.Add(new StreamPart(fileStream, fileName, mimeType, "file"));
             }
-
             var responses = await _learningManagementSystem.CreateDocumentByOwner(
-                streamParts,
+                streamParts.ToArray(),
                 ownerId,
-                DocumentType.StudentExam);
+                DocumentType.StudentExam.ToString());
         }
         catch (ValidationApiException e)
         {
@@ -60,5 +64,5 @@ public class DocumentsController(ILearningManagementSystem _learningManagementSy
             throw;
         }
         return RedirectToAction("Index","Home");
-    }
+    }*/
 }

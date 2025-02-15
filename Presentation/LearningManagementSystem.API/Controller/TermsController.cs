@@ -1,4 +1,6 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.Term;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.Term;
+using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,7 @@ public class TermsController (ITermService _termService) : ControllerBase
 {
     [HttpPost]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<TermRequest>))]
     public async Task<IActionResult> Post(TermRequest request)
     {
         var response = await _termService.CreateAsync(request); 
@@ -24,6 +27,7 @@ public class TermsController (ITermService _termService) : ControllerBase
     }
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
+    [ServiceFilter(typeof(EntityExistFilter<Term>))]
     public async Task<IActionResult> Get([FromRoute]Guid id)
     {
         var response = await _termService.GetAsync(id); 
@@ -31,6 +35,7 @@ public class TermsController (ITermService _termService) : ControllerBase
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<TermRequest>))]
     public async Task<IActionResult> Put(Guid id, TermRequest request)
     {
         var response = await _termService.UpdateAsync(id, request); 

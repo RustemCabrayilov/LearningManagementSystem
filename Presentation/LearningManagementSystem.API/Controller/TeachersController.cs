@@ -12,6 +12,8 @@ public class TeachersController(ITeacherService _teacherService) : ControllerBas
 {
     [HttpPost]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<TeacherRequest>))]
+
     public async Task<IActionResult> Post([FromForm]TeacherRequest request)
     {
         var response = await _teacherService.CreateAsync(request); 
@@ -34,6 +36,7 @@ public class TeachersController(ITeacherService _teacherService) : ControllerBas
     }
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<TeacherRequest>))]
     public async Task<IActionResult> Put(Guid id, [FromForm]TeacherRequest request)
     {
         var response = await _teacherService.UpdateAsync(id, request); 

@@ -9,7 +9,8 @@ using Refit;
 namespace LearningManagementSystem.UI.Areas.Admin.Controllers;
 
 [Area("admin")]
-public class UsersController(ILearningManagementSystem _learningManagementSystem,
+public class UsersController(
+    ILearningManagementSystem _learningManagementSystem,
     IToastNotification _toastNotification) : Controller
 {
     public async Task<IActionResult> Index([FromQuery] RequestFilter? filter)
@@ -18,22 +19,33 @@ public class UsersController(ILearningManagementSystem _learningManagementSystem
         int totalUsers = _learningManagementSystem.UserList(new RequestFilter() { AllUsers = true }).Result.Count;
         ViewBag.TotalPages = (int)Math.Ceiling(totalUsers / (double)filter.Count);
         ViewBag.CurrentPage = filter.Page;
-     
+
         return View(responses);
     }
 
-    public  IActionResult Edit(string id)
+    public async Task<IActionResult> Edit(string id)
     {
-        return View();
+        var response = await _learningManagementSystem.GetUser(id);
+        var model=new UserRequest(response.UserName, string.Empty,response.PhoneNumber,response.Email);
+        return View(model);
     }
 
     [HttpPost]
     public async Task<IActionResult> Edit([FromRoute] string id, UserRequest request)
     {
-        var response = await _learningManagementSystem.UpdateUser(id, request);
+        try
+        {
+            var response = await _learningManagementSystem.UpdateUser(id, request);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
         return RedirectToAction("Index");
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> Delete(string id)
     {

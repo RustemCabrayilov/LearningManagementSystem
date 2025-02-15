@@ -1,8 +1,13 @@
-﻿namespace LearningManagementSystem.Application.Abstractions.Services.Vote;
+﻿using LearningManagementSystem.Application.Abstractions.Services.Question;
+using LearningManagementSystem.Application.Abstractions.Services.Student;
+using LearningManagementSystem.Application.Abstractions.Services.Survey;
+
+namespace LearningManagementSystem.Application.Abstractions.Services.Vote;
 
 public record VoteResponse(
     Guid Id,
     int Point,
-    Domain.Entities.Question Question,
-    Domain.Entities.Student Student
+    QuestionResponse Question=null,
+    StudentResponse Student=null,
+    SurveyResponse SurveyResponse=null
 );

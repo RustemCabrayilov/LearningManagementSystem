@@ -56,4 +56,9 @@ public class MajorsController(ILearningManagementSystem _learningManagementSyste
         await _learningManagementSystem.RemoveMajor(id);
         return RedirectToAction("Index");
     }
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var response = await _learningManagementSystem.GetMajor(id);
+        return Json(response);
+    }
 }

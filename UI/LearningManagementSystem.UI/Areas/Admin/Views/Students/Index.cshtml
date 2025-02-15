@@ -21,7 +21,7 @@
             <td>@item.Surname</td>
             <td>@item.StudentNo</td>
             <td>
-                <a class="btn btn-warning" asp-area="admin" asp-controller="Teachers" asp-action="Edit" asp-route-id="@item.Id">
+                <a class="btn btn-warning" asp-area="admin" asp-controller="Students" asp-action="Edit" asp-route-id="@item.Id">
                     <i class="far fa-pen-to-square"></i>
                 </a>
             </td>
@@ -71,9 +71,9 @@
                             // Update modal content with fetched student details
                             let content = `
                                 <h4>User Info</h4>
-                                <p><strong>Username:</strong> ${data.student.appUser?.userName}</p>
-                                <p><strong>Phone Number:</strong> ${data.student.appUser?.phoneNumber}</p>
-                                <p><strong>Email:</strong> ${data.student.appUser?.email}</p>
+                                <p><strong>Username:</strong> ${data?.student.appUser?.userName}</p>
+                                <p><strong>Phone Number:</strong> ${data?.student.appUser?.phoneNumber}</p>
+                                <p><strong>Email:</strong> ${data?.student?.appUser?.email}</p>
                             `;
 
                             // Check if there's a file URL and determine file type

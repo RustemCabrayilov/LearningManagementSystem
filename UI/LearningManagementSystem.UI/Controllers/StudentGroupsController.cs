@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LearningManagementSystem.UI.Controllers;
 
 public class StudentGroupsController(ILearningManagementSystem _learningManagementSystem,
-    HttpContextAccessor _httpContextAccessor) : Controller
+    IHttpContextAccessor _httpContextAccessor) : Controller
 {
     // GET
     public async Task<IActionResult> Index()
@@ -16,7 +16,8 @@ public class StudentGroupsController(ILearningManagementSystem _learningManageme
         var students = await _learningManagementSystem.StudentList(new RequestFilter()
             { FilterField = "AppUserId", FilterValue = userclaim.Id });
         var student = students.FirstOrDefault();
-        ViewBag.Groups = student.Groups;
+        var response = await _learningManagementSystem.GetStudent(student.Id);
+        ViewBag.Groups = response.Groups;
         return View();
     }
 }

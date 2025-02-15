@@ -58,5 +58,9 @@ public class SurveysController(ILearningManagementSystem _learningManagementSyst
         var response = await _learningManagementSystem.ActivateSurvey(id);
         return RedirectToAction("Index");
     }
-    
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var response = await _learningManagementSystem.GetSurvey(id);
+        return Json(response);
+    }
 }

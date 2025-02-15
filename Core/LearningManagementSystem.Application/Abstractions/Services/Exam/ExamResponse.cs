@@ -7,6 +7,7 @@ namespace LearningManagementSystem.Application.Abstractions.Services.Exam;
 
 public record ExamResponse(
     Guid Id,
+    string Name,
     decimal MaxPoint,
     ExamType ExamType,
     GroupResponse Group,

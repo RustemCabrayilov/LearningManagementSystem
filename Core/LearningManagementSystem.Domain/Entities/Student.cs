@@ -16,5 +16,7 @@ public class Student:Person
     public List<Vote> Votes { get; set; }
     public List<Transcript> Transcripts { get; set; }
     public List<StudentRetakeExam> StudentRetakeExams { get; set; }
+    public List<StudentGroup> StudentGroups { get; set; }
+    public List<StudentSubject> StudentSubjects { get; set; }
 
 }

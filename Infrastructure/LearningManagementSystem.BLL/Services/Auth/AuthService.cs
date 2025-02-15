@@ -41,9 +41,9 @@ public class AuthService : IAuthService
         if (user == null && (requestDto.UserName != _AdminSettings.UserName &&
                              requestDto.Password != _AdminSettings.Password))
             throw new BadRequestException("Username or password is incorrect");
-       
+        var adminUser = await _userManager.FindByNameAsync(_AdminSettings.UserName);
         if ((requestDto.UserName == _AdminSettings.UserName &&
-             requestDto.Password == _AdminSettings.Password))
+             requestDto.Password == _AdminSettings.Password)&&adminUser is null)
         {
             var adminUserResult =
                 await _userManager.CreateAsync(new()

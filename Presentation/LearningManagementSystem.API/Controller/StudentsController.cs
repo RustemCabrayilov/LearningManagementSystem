@@ -35,7 +35,8 @@ public class StudentsController(IStudentService _studentService) : ControllerBas
     }
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin,Dean")]
-    public async Task<IActionResult> Put(Guid id, StudentRequest request)
+    [ServiceFilter(typeof(ValidationFilter<StudentRequest>))]
+    public async Task<IActionResult> Put(Guid id, [FromForm]StudentRequest request)
     {
         var response = await _studentService.UpdateAsync(id,request);
         return Ok(response);
@@ -61,13 +62,6 @@ public class StudentsController(IStudentService _studentService) : ControllerBas
         var response = await _studentService.AssignGroupsAsync(request); 
         return Ok(response);
     }
-    [HttpPost("assign-major")]
-    [Authorize(Roles = "Admin,Dean")]
-    public async Task<IActionResult> Post(StudentMajorDto request)
-    {
-        var response = await _studentService.AssignMajorAsync(request); 
-        return Ok(response);
-    }
     [HttpPost("assign-subject")]
     [Authorize(Roles = "Admin,Dean,Student")]
     public async Task<IActionResult> Post(StudentSubjectDto request)
@@ -83,7 +77,7 @@ public class StudentsController(IStudentService _studentService) : ControllerBas
         return Ok(response);
     }
     [HttpPost("assign-retakeExam")]
-    [Authorize(Roles = "Admin,Dean")]
+    [Authorize(Roles = "Admin,Dean,Student")]
     public async Task<IActionResult> Post(StudentRetakeExamDto request)
     {
         var response = await _studentService.AssignRetakeExamAsync(request); 

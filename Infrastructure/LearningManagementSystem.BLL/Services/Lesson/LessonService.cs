@@ -45,12 +45,15 @@ public class LessonService(
 
     public async Task<LessonResponse> UpdateAsync(Guid id, LessonRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<LessonResponse>(key);
         var entity = await _lessonRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Lesson not found");
         _mapper.Map(dto, entity);
         _lessonRepository.Update(entity);
         _unitOfWork.SaveChanges();
-        return _mapper.Map<LessonResponse>(entity);
+        var outDto= _mapper.Map<LessonResponse>(entity);
+        return outDto;
     }
 
     public async Task<LessonResponse> RemoveAsync(Guid id)

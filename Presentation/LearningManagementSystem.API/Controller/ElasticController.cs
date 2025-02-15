@@ -1,4 +1,5 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.ElasticService;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.ElasticService;
 using LearningManagementSystem.Application.Abstractions.Services.Major;
 using LearningManagementSystem.Application.Abstractions.Services.OCR;
 using LearningManagementSystem.Application.Abstractions.Services.User;
@@ -14,6 +15,7 @@ public class ElasticController(IElasticService _elasticService) : ControllerBase
 {
     [HttpPost]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
+    [ServiceFilter(typeof(ValidationFilter<UserResponse>))]
     public async Task<IActionResult> Post(UserResponse request)
     {
         var response = await _elasticService.AddOrUpdateAsync(request); 

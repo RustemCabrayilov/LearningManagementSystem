@@ -1,4 +1,4 @@
-﻿@model LearningManagementSystem.Application.Abstractions.Services.Chat.ChatResponse
+﻿@model List<LearningManagementSystem.Application.Abstractions.Services.User.UserResponse>
 @{
     Layout = null;
     int i = 1;
@@ -40,7 +40,7 @@
                                     </div>
                                 </div>
                                 <ul class="users">
-                                    @foreach (var admin in Model.Users)
+                                    @foreach (var admin in Model)
                                     {
                                         <li class="person" data-chat="person1">
                                             <div class="user">
@@ -68,7 +68,7 @@
                                 </ul>
                             </div>
                         </div>
-                        @foreach (var admin in Model.Users)
+                        @foreach (var admin in Model)
                         {
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9 @(i == 1 ? "chat-active" : "d-none")"
                                  id="chat@(admin.Id)">
@@ -179,6 +179,73 @@
             document.querySelectorAll(".chat-active").forEach(x => x.classList.add("d-none"));
             chat.classList.remove("d-none");
             chat.classList.add("chat-active");
+        });
+    });
+    document.querySelectorAll(".person").forEach(person => {
+        person.addEventListener("click", async () => {
+            var toUserId = person.querySelector("span").id;
+            var chat = document.querySelector(`#chat${toUserId}`);
+            document.querySelectorAll(".chat-active").forEach(x => x.classList.add("d-none"));
+            chat.classList.remove("d-none");
+            chat.classList.add("chat-active");
+
+            var accessToken = getCookie("access_token");
+            if (accessToken) {
+                try {
+                    var decodedToken = jwt_decode(accessToken);
+                    var userId = decodedToken.sub || decodedToken.id;
+
+                    var requestData = {
+                        UserId: userId,
+                        ToUserId: toUserId
+                    };
+
+                    $.ajax({
+                        url: '@Url.Action("GetChatMessages", "Chat")',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(requestData),
+                        success: function (messages) {
+                            var chatBox = chat.querySelector(".chat-box");
+                            chatBox.innerHTML = ""; // Clear previous chat
+
+                            messages.forEach(msg => {
+                                let formattedTime = new Date(msg.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                                if (msg.userId === userId) {
+                                    chatBox.innerHTML += `
+                                    <li class="chat-right">
+                                        <div class="chat-text">${msg.message}</div>
+                                        <div class="chat-hour">${formattedTime}</div>
+                                        <div class="chat-avatar">
+                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="You">
+                                            <div class="chat-name">You</div>
+                                        </div>
+                                    </li>`;
+                                } else {
+                                    chatBox.innerHTML += `
+                                    <li class="chat-left">
+                                        <div class="chat-avatar">
+                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="User">
+                                            <div class="chat-name">Receiver</div>
+                                        </div>
+                                        <div class="chat-text">${msg.message}</div>
+                                        <div class="chat-hour">${formattedTime}</div>
+                                    </li>`;
+                                }
+                            });
+
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        },
+                        error: function (error) {
+                            console.error("Error loading chat messages:", error);
+                        }
+                    });
+
+                } catch (error) {
+                    console.error("Failed to decode token", error);
+                }
+            }
         });
     });
 

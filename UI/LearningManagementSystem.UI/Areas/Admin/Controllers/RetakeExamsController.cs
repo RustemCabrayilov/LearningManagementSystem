@@ -6,6 +6,7 @@ using LearningManagementSystem.UI.Extensions;
 using LearningManagementSystem.UI.Integrations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
 using NToastNotify;
 using Refit;
 
@@ -35,8 +36,7 @@ public class RetakeExamsController(
         }
 
         ViewBag.Exams = await _learningManagementSystem.ExamList(null);
-        var model = new RetakeExamRequest(response.Exam.Id, response.Deadline, response.RetakeExamType, response.Price,
-            null);
+        var model = new RetakeExamRequest(response.Exam.Id, response.Deadline, response.RetakeExamType, response.Price);
         return View(model);
     }
 
@@ -45,59 +45,32 @@ public class RetakeExamsController(
     {
         try
         {
-            var streamParts = new List<StreamPart>();
-            foreach (var file in request.Files)
-            {
-                var fileName = Path.GetFileName(file.FileName);
-                // Use ASP.NET Core to get MIME type
-                var provider = new FileExtensionContentTypeProvider();
-                provider.TryGetContentType(fileName, out var mimeType);
+            var response = await _learningManagementSystem.UpdateRetakeExam(request);
+            return RedirectToAction("Edit",new{id=id});
 
-                if (mimeType == null)
-                {
-                    // If MIME type could not be determined, set a default type
-                    mimeType = "application/octet-stream";
-                }
-
-                var fileStream = file.OpenReadStream();
-                streamParts.Add(new StreamPart(fileStream, fileName, mimeType, "file"));
-            }
-
-            var response = await _learningManagementSystem.UpdateRetakeExam(
-                id,
-                request.ExamId,
-                request.Deadline, 
-                request.RetakeExamType,
-                request.Price,
-                streamParts);
-            _toastNotification.AddSuccessToastMessage("RetakeExam Updated Successfully");
             return RedirectToAction("Index");
         }
         catch (ValidationApiException e)
         {
-            ModelState.AddValidationError(e);
-            ViewBag.ReTakeExamTypeList = new List<string>();
-            foreach (var term in Enum.GetNames(typeof(RetakeExamType)))
-            {
-                ViewBag.ReTakeExamTypeList.Add(term);
-            }
-
-            ViewBag.Exams = await _learningManagementSystem.ExamList(null);
-
-            return View();
+            _toastNotification.AddErrorToastMessage(e?.Content?.Errors.FirstOrDefault().Value.FirstOrDefault());
+            return RedirectToAction("Edit",new{id=id});
         }
+        catch (ApiException e)
+        {
+            var errorContent = JsonConvert.DeserializeObject<Dictionary<string, string>>(e.Content);
+            if (errorContent != null && errorContent.ContainsKey("detail"))
+            {
+                var errorMessage = errorContent["detail"];
+                _toastNotification.AddErrorToastMessage(errorMessage);
+            }
+            return RedirectToAction("Edit",new{id=id});
+
+        }
+        
         catch (Exception e)
         {
             _toastNotification.AddAlertToastMessage(e.Message);
-            ViewBag.ReTakeExamTypeList = new List<string>();
-            foreach (var term in Enum.GetNames(typeof(RetakeExamType)))
-            {
-                ViewBag.ReTakeExamTypeList.Add(term);
-            }
-
-            ViewBag.Exams = await _learningManagementSystem.ExamList(null);
-
-            return View();
+            return RedirectToAction("Edit",new{id=id});
         }
     }
 
@@ -109,7 +82,7 @@ public class RetakeExamsController(
             ViewBag.ReTakeExamTypeList.Add(term);
         }
 
-        ViewBag.Exams = await _learningManagementSystem.ExamList(null);
+        ViewBag.Exams = await _learningManagementSystem.ExamList(new(){AllUsers = true});
         return View();
     }
 
@@ -118,56 +91,31 @@ public class RetakeExamsController(
     {
         try
         {
-            var streamParts = new List<StreamPart>();
-            foreach (var file in request.Files)
-            {
-                var fileName = Path.GetFileName(file.FileName);
-                // Use ASP.NET Core to get MIME type
-                var provider = new FileExtensionContentTypeProvider();
-                provider.TryGetContentType(fileName, out var mimeType);
-
-                if (mimeType == null)
-                {
-                    // If MIME type could not be determined, set a default type
-                    mimeType = "application/octet-stream";
-                }
-
-                var fileStream = file.OpenReadStream();
-                streamParts.Add(new StreamPart(fileStream, fileName, mimeType, "file"));
-            }
-
-            var response = await _learningManagementSystem.CreateRetakeExam(
-                request.ExamId,
-                request.Deadline, 
-                request.RetakeExamType,
-                request.Price,
-                streamParts);
+            
+            var response = await _learningManagementSystem.CreateRetakeExam(request);
             _toastNotification.AddSuccessToastMessage("RetakeExam Created Successfully");
             return RedirectToAction("Index");
         }
         catch (ValidationApiException e)
         {
-            ModelState.AddValidationError(e);
-            ViewBag.ReTakeExamTypeList = new List<string>();
-            foreach (var term in Enum.GetNames(typeof(RetakeExamType)))
-            {
-                ViewBag.ReTakeExamTypeList.Add(term);
-            }
-
-            ViewBag.Exams = await _learningManagementSystem.ExamList(null);
-            return View();
+            _toastNotification.AddErrorToastMessage(e?.Content?.Errors.FirstOrDefault().Value.FirstOrDefault());
+            return RedirectToAction("Create");
         }
+        catch (ApiException e)
+        {
+            var errorContent = JsonConvert.DeserializeObject<Dictionary<string, string>>(e.Content);
+            if (errorContent != null && errorContent.ContainsKey("detail"))
+            {
+                var errorMessage = errorContent["detail"];
+                _toastNotification.AddErrorToastMessage(errorMessage);
+            }
+            return RedirectToAction("Create");
+        }
+        
         catch (Exception e)
         {
-            _toastNotification.AddAlertToastMessage(e.Message);
-            ViewBag.ReTakeExamTypeList = new List<string>();
-            foreach (var term in Enum.GetNames(typeof(RetakeExamType)))
-            {
-                ViewBag.ReTakeExamTypeList.Add(term);
-            }
+            return RedirectToAction("Create");
 
-            ViewBag.Exams = await _learningManagementSystem.ExamList(null);
-            return View();
         }
     }
 
@@ -176,5 +124,18 @@ public class RetakeExamsController(
     {
         await _learningManagementSystem.RemoveRetakeExam(id);
         return RedirectToAction("Index");
+    }
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var response = await _learningManagementSystem.GetRetakeExam(id);
+       string retakeExamType = response.RetakeExamType.ToString();
+       string examType = response.Exam.ExamType.ToString();
+        return Json(
+            new
+            {
+                retakeExam=response,
+                retakeExamType=retakeExamType,
+                examType=examType
+            });
     }
 }

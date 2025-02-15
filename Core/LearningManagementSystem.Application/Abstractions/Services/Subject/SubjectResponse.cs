@@ -6,5 +6,4 @@ public record SubjectResponse(
     Guid Id,
     string Name,
     string SubjectCode,
-    int AttendanceLimit,
-    List<LessonResponse> Lessons);
+    int AttendanceLimit);

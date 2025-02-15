@@ -1,4 +1,6 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.RetakeExam;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.RetakeExam;
+using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +12,9 @@ public class RetakeExamsController(IRetakeExamService _retakeExamService) : Cont
 {
     [HttpPost]
     [Authorize(Roles = "Admin,Dean")]
-    public async Task<IActionResult> Post([FromForm]RetakeExamRequest request)
+    [ServiceFilter(typeof(ValidationFilter<RetakeExamRequest>))]
+
+    public async Task<IActionResult> Post(RetakeExamRequest request)
     {
         var response = await _retakeExamService.CreateAsync(request); 
         return Ok(response);
@@ -22,8 +26,10 @@ public class RetakeExamsController(IRetakeExamService _retakeExamService) : Cont
         var response = await _retakeExamService.GetAllAsync(filter); 
         return Ok(response);
     }
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
+    [ServiceFilter(typeof(EntityExistFilter<RetakeExam>))]
+
     public async Task<IActionResult> Get(Guid id)
     {
         var response = await _retakeExamService.GetAsync(id); 
@@ -31,6 +37,7 @@ public class RetakeExamsController(IRetakeExamService _retakeExamService) : Cont
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<RetakeExamRequest>))]
     public async Task<IActionResult> Put(Guid id, RetakeExamRequest request)
     {
         var response = await _retakeExamService.UpdateAsync(id, request); 

@@ -27,16 +27,15 @@ public class FacultyService(
 
     public async Task<FacultyResponse> UpdateAsync(Guid id, FacultyRequest dto)
     {
-   
+       string key = $"member-{id}";
+       var data = _redisCachingService.GetData<FacultyResponse>(key);
         var entity = await _facultyRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Faculty not found");
         _mapper.Map(dto, entity);
          _facultyRepository.Update(entity);
          _unitOfWork.SaveChanges();
         var outDto = _mapper.Map<FacultyResponse>(entity);
-        string key = $"member-{id}";
-        var data = _redisCachingService.GetData<FacultyResponse>(key);
-         if(data is not null) _redisCachingService.SetData(key, outDto);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
         return outDto;
     }
 

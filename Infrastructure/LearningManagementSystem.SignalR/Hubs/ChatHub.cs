@@ -41,10 +41,8 @@ namespace LearningManagementSystem.SignalR.Hubs
             await base.OnConnectedAsync();
         }*/
 
-        public async Task Disconnect(Exception? exception)
+        public async Task Disconnect(string userId)
         {
-          
-            string userId;
             Users.TryGetValue(Context.ConnectionId, out userId);
             Users.Remove(Context.ConnectionId);
             var user = await _userManager.FindByIdAsync(userId);

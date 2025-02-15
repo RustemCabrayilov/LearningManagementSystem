@@ -24,38 +24,22 @@ public class RetakeExamService(
             var entity = _mapper.Map<Domain.Entities.RetakeExam>(dto);
             await _RetakeExamRepository.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
-            /*foreach (var file in dto.Files)
-            {
-                string fileName=Guid.NewGuid().ToString()+Path.GetExtension(file.FileName);
-                var localPath = _environment.ContentRootPath;
-                var directoryPath = Path.Combine("Documents","RetakeExams",fileName);
-                var fullPath = Path.Combine(localPath,directoryPath);
-                using (FileStream fs = new FileStream(fullPath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fs);
-                }
-                var document = new Domain.Entities.Document()
-                {
-                    OwnerId = entity.Id,
-                    FileName = fileName,
-                    OriginName = file.FileName,
-                    Path = directoryPath,
-                    DocumentType = DocumentType.RetakeExam,
-                };
-                await _documentRepository.AddAsync(document);
-                await _unitOfWork.SaveChangesAsync();
-            }*/
+   
             return _mapper.Map<RetakeExamResponse>(entity);
         }
 
         public async Task<RetakeExamResponse> UpdateAsync(Guid id, RetakeExamRequest dto)
         {
+            string key = $"member-{id}";
+            var data = _redisCachingService.GetData<RetakeExamResponse>(key);
             var entity = await _RetakeExamRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
             if (entity is null) throw new NotFoundException("RetakeExam not found");
             _mapper.Map(dto, entity);
              _RetakeExamRepository.Update(entity);
              _unitOfWork.SaveChanges();
-            return _mapper.Map<RetakeExamResponse>(entity);
+             var outDto=_mapper.Map<RetakeExamResponse>(entity);
+             if(data is not null) _redisCachingService.SetData(key, outDto);
+             return outDto;
         }
 
         public async Task<RetakeExamResponse> RemoveAsync(Guid id)

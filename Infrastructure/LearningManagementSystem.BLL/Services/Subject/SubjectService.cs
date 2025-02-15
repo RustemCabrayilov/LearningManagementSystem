@@ -25,12 +25,16 @@ public class SubjectService(
 
     public async Task<SubjectResponse> UpdateAsync(Guid id, SubjectRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<SubjectResponse>(key);
         var entity = await _subjectRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Subject not found");
         _mapper.Map(dto, entity);
         _subjectRepository.Update(entity);
         _unitOfWork.SaveChanges();
-        return _mapper.Map<SubjectResponse>(entity);
+        var outDto=_mapper.Map<SubjectResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<SubjectResponse> RemoveAsync(Guid id)

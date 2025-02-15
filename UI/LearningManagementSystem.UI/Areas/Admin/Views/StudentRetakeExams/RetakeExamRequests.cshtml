@@ -1,0 +1,83 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.StudentRetakeExam.StudentRetakeExamResponse>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Status</th>
+        <th>New Point</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@item.Id</td>
+        <td>@item.Status</td>
+        <td>@item.NewPoint</td>
+        <td>@item.ApplyDate</td>
+        <td>
+            <a class="btn btn-warning" asp-area="admin" asp-controller="StudentRetakeExams" asp-action="Edit" asp-route-id="@item.Id">
+                <i class="far fa-pen-to-square"></i>
+            </a>
+        </td>
+        <td>
+            <!-- Button to open modal -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                <i class="fas fa-trash-can"></i>
+            </button>
+            @await Html.PartialAsync("_Delete",item)
+        </td>
+        <td>
+            <!-- Button to open modal -->
+            <button type="button" class="btn btn-primary details-btn" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-lesson-id="@item.Id">
+                Details
+            </button>
+            @await Html.PartialAsync("_Details", item)
+        </td>
+    </tr>
+    }
+    </tbody>
+</table>
+<partial name="_Pagination"/>
+
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let lessonId = this.getAttribute('data-lesson-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${lessonId} .modal-body`);
+                console.log(lessonId)
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/StudentRetakeExams/Details?id=${lessonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update modal content with fetched student details
+                        let content = `
+                                <h4>Student's Retake Exam Info</h4>
+                                <p><strong>Retake Exam Type:</strong> ${data?.retakeExamType}</p>
+                                <p><strong>Deadline:</strong> ${data?.response?.retakeExam?.deadline}</p>
+                                <p><strong>Student:</strong> ${data?.response.student.name} ${data?.response.student.surname}</p>
+                                <p><strong>Student No:</strong> ${data?.response?.student?.studentNo}</p>
+                            `;
+
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching  details:', error);
+                        modalBody.innerHTML = `<p>Error loading student details.</p>`;
+                    });
+            });
+        });
+    });
+</script>
+}

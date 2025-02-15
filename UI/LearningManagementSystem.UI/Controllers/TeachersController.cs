@@ -13,4 +13,13 @@ public class TeachersController(ILearningManagementSystem _learningManagementSys
         ViewBag.User=await _learningManagementSystem.GetUser(userId);
         return View(teacher);
     }
+    public async Task<IActionResult> TeacherSurveys(RequestFilter? filter)
+    {
+        var responses = await _learningManagementSystem.SurveyList(filter);
+        int totalVotes = _learningManagementSystem.VoteList(new RequestFilter(){AllUsers = true}).Result.Count;
+        ViewBag.TotalPages = (int)Math.Ceiling(totalVotes / (double)filter.Count);
+        ViewBag.CurrentPage = filter.Page;
+        // Return the schedule data in a format that can be easily consumed by JavaScript
+        return View(responses);
+    }
 }

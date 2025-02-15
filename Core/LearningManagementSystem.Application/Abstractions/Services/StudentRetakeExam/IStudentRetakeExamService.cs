@@ -10,4 +10,5 @@ public interface IStudentRetakeExamService
     Task<StudentRetakeExamResponse> RemoveAsync(Guid id);
     Task<StudentRetakeExamResponse> GetAsync(Guid id);
     Task<IList<StudentRetakeExamResponse>> GetAllAsync(RequestFilter? filter);
+    Task<List<StudentRetakeExamResponse>> ActiveTermRetakeRequests(RequestFilter? filter);
 }

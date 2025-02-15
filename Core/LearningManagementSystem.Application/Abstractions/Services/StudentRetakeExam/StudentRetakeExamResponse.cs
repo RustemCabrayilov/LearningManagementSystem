@@ -9,7 +9,7 @@ public record StudentRetakeExamResponse(
     Guid Id,
     StudentResponse Student,
     RetakeExamResponse RetakeExam,
-    TermResponse Term,
     Status Status,
-    float NewPoint
+    float NewPoint,
+    DateTime ApplyDate
     );

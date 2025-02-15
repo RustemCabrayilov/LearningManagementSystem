@@ -11,4 +11,6 @@ public class Vote:BaseEntity
     public Guid QuestionId { get; set; }
     public Student Student { get; set; }
     public Guid StudentId { get; set; }
+    public Survey Survey { get; set; }
+    public Guid SurveyId { get; set; }
 }

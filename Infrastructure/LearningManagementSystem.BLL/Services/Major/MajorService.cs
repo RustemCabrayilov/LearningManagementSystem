@@ -2,9 +2,12 @@
 using LearningManagementSystem.Application.Abstractions.Repository;
 using LearningManagementSystem.Application.Abstractions.Services.Major;
 using LearningManagementSystem.Application.Abstractions.Services.Redis;
+using LearningManagementSystem.Application.Abstractions.Services.Student;
 using LearningManagementSystem.Application.Abstractions.UnitOfWork;
 using LearningManagementSystem.Application.Exceptions;
+using LearningManagementSystem.Domain.Entities.Identity;
 using LearningManagementSystem.Persistence.Filters;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearningManagementSystem.BLL.Services.Major;
@@ -12,6 +15,7 @@ namespace LearningManagementSystem.BLL.Services.Major;
 public class MajorService(
     IGenericRepository<Domain.Entities.Major> _majorRepository,
     IGenericRepository<Domain.Entities.Faculty> _facultyRepository,
+    IGenericRepository<Domain.Entities.Student> _studentRepository,
     IRedisCachingService _redisCachingService,
     IMapper _mapper,
     IUnitOfWork _unitOfWork) : IMajorService
@@ -27,6 +31,8 @@ public class MajorService(
 
     public async Task<MajorResponse> UpdateAsync(Guid id, MajorRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<MajorResponse>(key);
         var entity = await _majorRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Major not found");
         _mapper.Map(dto, entity);
@@ -34,6 +40,7 @@ public class MajorService(
         _unitOfWork.SaveChanges();
         entity.Faculty = await _facultyRepository.GetAsync(x => x.Id == dto.FacultyId && !x.IsDeleted);
         var outDto = _mapper.Map<MajorResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
         return outDto;
     }
 

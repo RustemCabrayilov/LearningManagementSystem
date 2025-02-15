@@ -28,7 +28,7 @@ public class UsersController(IUserService _userService) : ControllerBase
         return Ok(response);
     }
     [HttpGet("{id}")]
-    [Authorize(Roles = "Admin,Dean,Teacher")]
+    [Authorize(Roles = "Admin,Dean,Teacher,Student")]
     [ServiceFilter(typeof(UserExistFilter))]
 
     public async Task<IActionResult> Get([FromRoute]string id)
@@ -38,6 +38,7 @@ public class UsersController(IUserService _userService) : ControllerBase
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(ValidationFilter<UserRequest>))]
     public async Task<IActionResult> Put(string id, UserRequest request)
     {
         var response = await _userService.UpdateAsync(id, request); 

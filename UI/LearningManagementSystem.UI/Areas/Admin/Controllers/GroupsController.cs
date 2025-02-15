@@ -3,6 +3,7 @@ using LearningManagementSystem.Application.Abstractions.Services.Group;
 using LearningManagementSystem.Persistence.Filters;
 using LearningManagementSystem.UI.Integrations;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NToastNotify;
 using Refit;
 
@@ -58,7 +59,12 @@ public class GroupsController(ILearningManagementSystem _learningManagementSyste
         }
         catch (ApiException e)
         {
-            _toastNotification.AddErrorToastMessage(e.Message);
+            var errorContent = JsonConvert.DeserializeObject<Dictionary<string, string>>(e.Content);
+            if (errorContent != null && errorContent.ContainsKey("detail"))
+            {
+                var errorMessage = errorContent["detail"];
+                _toastNotification.AddErrorToastMessage(errorMessage);
+            }
             return RedirectToAction("Edit",new {id = id});
         }
         catch (Exception e)
@@ -111,5 +117,24 @@ public class GroupsController(ILearningManagementSystem _learningManagementSyste
     {
      var response = await _learningManagementSystem.ActivateGroup(id);
         return RedirectToAction("Index");
+    }
+    public async Task<IActionResult> Details(Guid id)
+    {
+        try
+        {
+            var response = await _learningManagementSystem.GetGroup(id);
+            return Json(response);
+        }
+        catch (ApiException apiEx)
+        {
+            // Log or handle the exception
+            _toastNotification.AddErrorToastMessage("API error occurred: " + apiEx.Content);
+            return StatusCode(500, "Internal Server Error");
+        }
+        catch (Exception ex)
+        {
+            _toastNotification.AddErrorToastMessage("Unexpected error occurred: " + ex.Message);
+            return StatusCode(500, "Internal Server Error");
+        }
     }
 }

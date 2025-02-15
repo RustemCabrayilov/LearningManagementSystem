@@ -1,4 +1,6 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.Transcript;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.Transcript;
+using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,7 @@ public class TranscriptsController(ITranscriptService _transcriptService) : Cont
 {
     [HttpPost]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<TranscriptRequest>))]
     public async Task<IActionResult> Post(TranscriptRequest request)
     {
         var response = await _transcriptService.CreateAsync(request); 
@@ -24,6 +27,7 @@ public class TranscriptsController(ITranscriptService _transcriptService) : Cont
     }
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
+    [ServiceFilter(typeof(EntityExistFilter<Transcript>))]
     public async Task<IActionResult> Get([FromRoute]Guid id)
     {
         var response = await _transcriptService.GetAsync(id); 
@@ -31,6 +35,8 @@ public class TranscriptsController(ITranscriptService _transcriptService) : Cont
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<TranscriptRequest>))]
+
     public async Task<IActionResult> Put(Guid id, TranscriptRequest request)
     {
         var response = await _transcriptService.UpdateAsync(id, request); 

@@ -10,5 +10,6 @@ public interface IAttendanceService
     Task<AttendanceResponse> UpdateAsync(Guid id,AttendanceRequest dto);
     Task<AttendanceResponse> RemoveAsync(Guid id);
     Task<AttendanceResponse> GetAsync(Guid id);
-    Task<IList<AttendanceResponse>> GetAllAsync(RequestFilter? filter);   
+    Task<IList<AttendanceResponse>> GetAllAsync(RequestFilter? filter);
+    Task<IList<AttendanceResponse>> StudentAttendances(StudentAttendanceDto request);
 }

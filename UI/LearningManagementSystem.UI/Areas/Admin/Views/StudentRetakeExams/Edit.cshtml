@@ -9,7 +9,6 @@
                 <div class="form-group">
                     <input hidden asp-for="StudentId" type="text" class="form-control">
                     <input hidden asp-for="RetakeExamId" type="text" class="form-control">
-
                 </div>
                 <div class="form-group">
                     <label asp-for="Status" class="control-label">
@@ -19,6 +18,11 @@
                         <option>Please select one</option>
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NewPoint">New Point</label>
+                    <input asp-for="NewPoint" type="number" min="0" class="form-control" id="NewPoint" placeholder="New Point">
+                    <span asp-validation-for="NewPoint" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                 <button class="btn btn-light" asp-action="Index">Cancel</button>

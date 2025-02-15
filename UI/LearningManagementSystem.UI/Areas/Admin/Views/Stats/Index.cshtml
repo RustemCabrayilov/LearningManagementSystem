@@ -1,8 +1,170 @@
-﻿@model dynamic
+﻿<!-- Styles -->
+<style>
+  #chartdiv {
+    width: 100%;
+    height: 500px;
+  }
 
-@{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
-}
+  #chartdiv2 {
+    width: 100%;
+    height: 400px;
+  }
 
-<h2>title</h2>
+  #chartdiv3 {
+    width: 100%;
+    height:400px;
+  }
+  #chartdiv2, #chartdiv3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+<!-- Resources -->
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<!-- HTML -->
+<div class="container py-5">
+  <div class="row">
+    <div class="col-md-12 pt-2">
+      <h2>Top Teacher Rates</h2>
+      <div id="chartdiv"></div>
+    </div>
+      <div class="col-md-7 pt-2">
+        <h2>Top Teacher Rates</h2>
+        <div id="chartdiv2"></div>
+      </div>
+      <div class="col-md-5 pt-2">
+        <h2>Most Efficient Teacher</h2>
+        <div id="chartdiv3"></div>
+      </div>
+    </div>
+</div>
+
+
+<!-- Chart Script -->
+<script>
+  async function fetchChartData(url) {
+    const response = await fetch(url);
+    return response.json();
+  }
+
+  am5.ready(async function() {
+    // Fetch data from the API
+    const studentData = await fetchChartData('/Admin/Stats/AverageOfStudents');
+    const teacherData = await fetchChartData('/Admin/Stats/TopRatedTeachers');
+    const efficientTeacherData = await fetchChartData('/Admin/Stats/MostEfficientTeachers');
+
+    // Process data for column chart
+    const studentChartData = studentData.map(item => ({
+      category: item.entity.name + " " + item.entity.surname + " " + item.entity.studentNo,
+      value: item.count
+    }));
+
+    // Process data for pie charts
+    const teacherChartData = teacherData.map(item => ({
+      category: item.entity.name + " " + item.entity.surname,
+      value: item.count
+    }));
+
+    const efficientTeacherChartData = efficientTeacherData.map(item => ({
+      category: item.entity.name + " " + item.entity.surname,
+      value: item.count
+    }));
+
+    // First Chart (XY Chart)
+    var root1 = am5.Root.new("chartdiv");
+    root1.setThemes([am5themes_Animated.new(root1)]);
+    var chart1 = root1.container.children.push(am5xy.XYChart.new(root1, {
+      panX: true,
+      panY: true,
+      wheelX: "panX",
+      wheelY: "zoomX",
+      pinchZoomX: true
+    }));
+
+    var xAxis1 = chart1.xAxes.push(am5xy.CategoryAxis.new(root1, {
+      categoryField: "category",
+      renderer: am5xy.AxisRendererX.new(root1, { minGridDistance: 30 })
+    }));
+
+    var yAxis1 = chart1.yAxes.push(am5xy.ValueAxis.new(root1, {
+      renderer: am5xy.AxisRendererY.new(root1, {})
+    }));
+
+    var series1 = chart1.series.push(am5xy.ColumnSeries.new(root1, {
+      name: "Average Score",
+      xAxis: xAxis1,
+      yAxis: yAxis1,
+      valueYField: "value",
+      categoryXField: "category",
+      tooltip: am5.Tooltip.new(root1, { labelText: "{valueY}" })
+    }));
+
+    series1.data.setAll(studentChartData);
+    xAxis1.data.setAll(studentChartData);
+    series1.appear(1000);
+    chart1.appear(1000, 100);
+
+    // Second Chart (Pie Chart - Top Rated Teachers)
+    var root2 = am5.Root.new("chartdiv2");
+    root2.setThemes([am5themes_Animated.new(root2)]);
+    var chart2 = root2.container.children.push(am5percent.PieChart.new(root2, {
+      endAngle: 270
+    }));
+
+    var series2 = chart2.series.push(am5percent.PieSeries.new(root2, {
+      valueField: "value",
+      categoryField: "category",
+      endAngle: 270
+    }));
+
+    series2.data.setAll(teacherChartData);
+    series2.appear(1000, 100);
+
+    // Third Chart (Pie Chart - Most Efficient Teachers)
+    var root3 = am5.Root.new("chartdiv3");
+    root3.setThemes([am5themes_Animated.new(root3)]);
+
+// Create Pie Chart
+    var chart3 = root3.container.children.push(am5percent.PieChart.new(root3, {
+      layout: root3.verticalLayout,
+      innerRadius: am5.percent(40) // Donut shape
+    }));
+
+// Create Series
+    var series3 = chart3.series.push(am5percent.PieSeries.new(root3, {
+      valueField: "value",
+      categoryField: "category",
+      alignLabels: false
+    }));
+
+// Set Label Positions
+    series3.labels.template.setAll({
+      textType: "circular",
+      centerX: am5.percent(50),
+      centerY: am5.percent(50),
+      radius: am5.percent(80),
+      fontSize: 14
+    });
+
+// Add Legend
+    var legend3 = chart3.children.push(am5.Legend.new(root3, {
+      centerX: am5.percent(50),
+      x: am5.percent(50),
+      marginTop: 15,
+      marginBottom: 15
+    }));
+
+// Set Data
+    series3.data.setAll(efficientTeacherChartData);
+    legend3.data.setAll(series3.dataItems);
+
+// Animate Appearance
+    series3.appear(1000, 100);
+  }); // end am5.ready()
+</script>

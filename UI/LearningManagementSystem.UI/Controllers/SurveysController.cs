@@ -28,7 +28,7 @@ public class SurveysController(ILearningManagementSystem _learningManagementSyst
         return View();
     }
     [HttpPost]
-    public async Task<IActionResult> Details([FromForm]VoteRequest[] votes)
+    public async Task<IActionResult> Details(Guid id,[FromForm]VoteRequest[] votes)
     {
         try
         {
@@ -41,7 +41,7 @@ public class SurveysController(ILearningManagementSystem _learningManagementSyst
             
             foreach (var vote in votes)
             {
-                requests.Add(new VoteRequest(vote.Point, vote.QuestionId,student.Id));
+                requests.Add(new VoteRequest(vote.Point, vote.QuestionId,student.Id,id));
             }
             var response = await _learningManagementSystem.CreateVoteList(requests.ToArray());
 

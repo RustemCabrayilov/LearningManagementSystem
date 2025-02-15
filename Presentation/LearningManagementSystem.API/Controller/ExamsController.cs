@@ -35,6 +35,7 @@ public class ExamsController(IExamService _examService) : ControllerBase
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<ExamRequest>))]
     public async Task<IActionResult> Put(Guid id, ExamRequest request)
     {
         var response = await _examService.UpdateAsync(id, request); 

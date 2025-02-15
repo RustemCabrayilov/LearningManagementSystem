@@ -22,7 +22,7 @@ public class GroupsController (IGroupService _groupService) : ControllerBase
         var response = await _groupService.GetAllAsync(filter); 
         return Ok(response);
     }
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
     public async Task<IActionResult> Get(Guid id)
     {

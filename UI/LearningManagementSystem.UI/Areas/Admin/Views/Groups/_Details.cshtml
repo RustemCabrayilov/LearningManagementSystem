@@ -4,23 +4,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel-@Model.Id">Details</h5>
+                <h5 class="modal-title" id="detailModal-@Model.Id">Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>@Model.Major?.Title</p>
-                <p>@Model.Subject?.Name</p>
-                <p>@Model.Subject?.SubjectCode</p>
-                <p>@Model.Subject?.AttendanceLimit</p>
-                <p>@Model.Teacher?.Name @Model.Teacher?.Surname</p>
-                @foreach (var item in Model.Students)
-                {
-                <p>@item.Name</p>
-                <p>@item.Surname</p>
-                <p>@item.StudentNo</p>
-                <p>@item.AppUser.Email</p>
-                <p>@item.AppUser.UserName</p>
-                }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

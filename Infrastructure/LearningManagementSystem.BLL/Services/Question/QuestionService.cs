@@ -25,12 +25,16 @@ public class QuestionService(
 
     public async Task<QuestionResponse> UpdateAsync(Guid id, QuestionRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<QuestionResponse>(key);
         var entity = await _questionRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Question not found");
         _mapper.Map(dto, entity);
         _questionRepository.Update(entity);
         _unitOfWork.SaveChanges();
         var outDto = _mapper.Map<QuestionResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
+
         return outDto;
     }
 

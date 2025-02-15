@@ -1,4 +1,6 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.Document;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.Document;
+using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Domain.Enums;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +20,7 @@ public class DocumentsController(IDocumentService _documentService) : Controller
     }
     [HttpPost("create-byowner")]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(ValidationFilter<DocumentByOwner>))]
     public async Task<IActionResult> Post([FromForm]DocumentByOwner documentByOwner)
     {
         var response = await _documentService.CreateByOwnerAsync(documentByOwner);
@@ -33,6 +36,7 @@ public class DocumentsController(IDocumentService _documentService) : Controller
     }
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
+    [ServiceFilter(typeof(EntityExistFilter<Document>))]
     public async Task<IActionResult> Get(Guid id)
     {
         var response = await _documentService.GetAsync(id);
@@ -47,6 +51,7 @@ public class DocumentsController(IDocumentService _documentService) : Controller
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(ValidationFilter<DocumentRequest>))]
     public async Task<IActionResult> Put(Guid id,DocumentRequest request)
     {
         var response = await _documentService.UpdateAsync(id,request);

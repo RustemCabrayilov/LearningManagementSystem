@@ -1,5 +1,7 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.Student;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.Student;
 using LearningManagementSystem.Application.Abstractions.Services.StudentGroup;
+using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +13,7 @@ public class StudentGroupsController(IStudentGroupService _studentGroupService) 
 {
     [HttpPost]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(ValidationFilter<StudentGroupDto>))]
     public async Task<IActionResult> Post(StudentGroupDto request)
     {
         var response = await _studentGroupService.CreateAsync(request); 
@@ -25,6 +28,8 @@ public class StudentGroupsController(IStudentGroupService _studentGroupService) 
     }
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
+    [ServiceFilter(typeof(EntityExistFilter<StudentGroup>))]
+
     public async Task<IActionResult> Get([FromRoute]Guid id)
     {
         var response = await _studentGroupService.GetAsync(id); 
@@ -32,6 +37,8 @@ public class StudentGroupsController(IStudentGroupService _studentGroupService) 
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(ValidationFilter<StudentGroupDto>))]
+
     public async Task<IActionResult> Put(Guid id, StudentGroupDto request)
     {
         var response = await _studentGroupService.UpdateAsync(id, request); 

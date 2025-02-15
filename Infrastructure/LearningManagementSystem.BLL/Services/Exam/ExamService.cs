@@ -24,6 +24,7 @@ public class ExamService(
     public async Task<ExamResponse> CreateAsync(ExamRequest dto)
     {
         var entity = _mapper.Map<Domain.Entities.Exam>(dto);
+        entity.Name = $"{dto.StartDate}-{dto.EndDate}-{dto.ExamType}";
         await _examRepository.AddAsync(entity);
         await _unitOfWork.SaveChangesAsync();
         var studentGroups = await _studentGroupRepository.GetAll(x=>x.GroupId==entity.GroupId&& !x.IsDeleted,null).ToListAsync();
@@ -42,12 +43,15 @@ public class ExamService(
 
     public async Task<ExamResponse> UpdateAsync(Guid id, ExamRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<ExamResponse>(key);
         var entity = await _examRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Exam not found");
         _mapper.Map(dto, entity);
         _examRepository.Update(entity); 
         _unitOfWork.SaveChanges();
         var outDto = _mapper.Map<ExamResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
         return outDto;
     }
 

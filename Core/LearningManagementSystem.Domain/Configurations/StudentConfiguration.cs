@@ -16,5 +16,10 @@ public class StudentConfiguration:IEntityTypeConfiguration<Student>
             .WithOne(g => g.Student)
             .HasForeignKey(g => g.StudentId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasMany(t => t.Votes)
+            .WithOne(g => g.Student)
+            .HasForeignKey(g => g.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -9,6 +9,7 @@ using LearningManagementSystem.UI.Extensions;
 using LearningManagementSystem.UI.Integrations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
 using NToastNotify;
 using Refit;
 
@@ -24,27 +25,23 @@ public class DeansController(
         try
         {
             var responses = await _learningManagementSystem.DeanList(filter);
-            /*var responseTasks = responses.Select(async response =>
-            {
-                var document = await _learningManagementSystem.GetByOwner(response.Id);
-                string plainText = $"Documents/Details/{document.Id}";
-                var qrCodeStream = _learningManagementSystem.GenerateQRCode(plainText).Result;
-
-                using var memoryStream = new MemoryStream();
-                qrCodeStream.CopyTo(memoryStream);
-                var qrCodeBytes = memoryStream.ToArray();
-                var base64String = Convert.ToBase64String(qrCodeBytes);
-                string qrCodeUrl = $"data:image/png;base64,{base64String}";
-
-                return response with { QrCodeUrl = qrCodeUrl };
-            }).ToList();
-            responses = await Task.WhenAll(responseTasks);*/
-            int totalDeans = _learningManagementSystem.DeanList(new RequestFilter(){AllUsers = true}).Result.Count;
+            int totalDeans = _learningManagementSystem.DeanList(new RequestFilter() { AllUsers = true }).Result.Count;
             ViewBag.TotalPages = (int)Math.Ceiling(totalDeans / (double)filter.Count);
             ViewBag.CurrentPage = filter.Page;
             return View(responses);
         }
         catch (ApiException e)
+        {
+            var errorContent = JsonConvert.DeserializeObject<Dictionary<string, string>>(e.Content);
+            if (errorContent != null && errorContent.ContainsKey("detail"))
+            {
+                var errorMessage = errorContent["detail"];
+                _toastNotification.AddErrorToastMessage(errorMessage);
+            }
+
+            return RedirectToAction("Index","Home");
+        }
+        catch (Exception e)
         {
             _toastNotification.AddErrorToastMessage(e.Message);
             return RedirectToAction("Index", "Home");
@@ -71,15 +68,26 @@ public class DeansController(
         {
             try
             {
-                var tempFilePath = Path.GetTempFileName();
-                await using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                var fileName = Path.GetFileName(request.File.FileName);
+
+                // Use ASP.NET Core to get MIME type
+                var provider = new FileExtensionContentTypeProvider();
+                provider.TryGetContentType(fileName, out var mimeType);
+
+                if (mimeType == null)
                 {
-                    await request.File.CopyToAsync(stream);
+                    // If MIME type could not be determined, set a default type
+                    mimeType = "application/octet-stream";
                 }
 
-                string filePath = tempFilePath;
-                var fileInfo = new FileInfo(filePath);
-                FileInfoPart fileInfoPart = new FileInfoPart(fileInfo, fileInfo.Name);
+                // Open the file as a stream within a using block to ensure proper disposal
+                var fileStream = request.File.OpenReadStream();
+                // Convert the stream to a MemoryStream (to handle issues with ReadTimeout, WriteTimeout)
+                  
+
+                // Create StreamPart with file stream and MIME type
+                var streamPart = new StreamPart(fileStream, fileName, mimeType, "file");
+
                 var response = await _learningManagementSystem.UpdateDean(id,
                     request.Name,
                     request.Surname,
@@ -87,25 +95,29 @@ public class DeansController(
                     (int)request.PositionType,
                     request.FacultyId,
                     request.AppUserId,
-                    fileInfoPart);
+                    streamPart);
                 Console.WriteLine("UploadFileInModel_WithRefitAsync response :" + response);
                 var document = await _learningManagementSystem.GetByOwner(response.Id);
-
-                /*var ocrResponse = await _learningManagementSystem.GetTextFromFile(fileInfoPart, document.Id);
-                foreach (var ocrModel in ocrResponse)
-                {
-                    var elasticResponse = await _learningManagementSystem.CreateElastic(ocrModel);
-                }*/
-                System.IO.File.Delete(tempFilePath);
-                return RedirectToAction("Index");
             }
             catch (ValidationApiException ex)
             {
                 ModelState.AddValidationError(ex);
             }
+            catch (ApiException e)
+            {
+                var errorContent = JsonConvert.DeserializeObject<Dictionary<string, string>>(e.Content);
+                if (errorContent != null && errorContent.ContainsKey("detail"))
+                {
+                    var errorMessage = errorContent["detail"];
+                    _toastNotification.AddErrorToastMessage(errorMessage);
+                }
+
+                return RedirectToAction("Index","Home");
+            }
             catch (Exception e)
             {
                 _toastNotification.AddErrorToastMessage(e.Message);
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -203,6 +215,18 @@ public class DeansController(
 
         return View(request);
     }
-    
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var response = await _learningManagementSystem.GetTeacher(id);
+        var document = await _learningManagementSystem.GetByOwner(id);
+        return Json(new
+            {
+                student = response,
+                fileUrl = document.Path,
+                fileName=document.FileName
+            }
+        );
+    }
+
 
 }

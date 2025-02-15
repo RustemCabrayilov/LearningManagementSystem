@@ -8,15 +8,14 @@ Layout = "_Layout";
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <form class="forms-sample" asp-action="AssignPoint" method="post">
+            <form class="forms-sample" asp-action="AssignAttendance" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                <input type="hidden" name="lessonId" value="@Context.Request.Query["lessonId"]" />
                 @for (int i = 0; i < Model.Length; i++)
                 {
                     <div class="row justify-content-between align-items-center">
                         <div class="form-group col-2">
                             <input readonly name="attendances[@i].Student.Id" type="text" class="form-control" value="@Model[i].Student.Id" placeholder="Id">
-                            <input hidden name="attendances[@i].Lesson.Id" type="text" class="form-control" value="@Model[i].Lesson.Id" placeholder="Id">
                             <input hidden name="attendances[@i].Id" type="text" class="form-control" value="@Model[i].Id" placeholder="Id">
                             <input hidden name="attendances[@i].Student.Name" type="text" class="form-control" value="@Model[i].Student.Name" placeholder="Name">
                         </div>
@@ -31,15 +30,28 @@ Layout = "_Layout";
                         </div>
                         <div class="form-group col-3">
                             <label for="Absence">Absence</label>
-                            <input name="attendances[@i].Absence" type="checkbox" min="0" class="form-control" value="@Model[i].Absence">
-                            
+                            <input type="checkbox" name="attendances[@i].Absence" value="true" id="checkbox_@i" @(Model[i].Absence ? "checked" : "") onclick="toggleAbsence(@i)" />
                         </div>
                     </div>
                 }
-
                 <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                 <button class="btn btn-light" asp-action="Index">Cancel</button>
             </form>
         </div>
     </div>
 </div>
+<script>
+    // This function will handle the checkbox click event
+    function toggleAbsence(index) {
+        var checkbox = document.getElementById("checkbox_" + index);
+        var hiddenInput = document.querySelector("input[name='attendances[" + index + "].Absence'][type='hidden']");
+
+        // If checkbox is checked, set the hidden value to true
+        if (checkbox.checked) {
+            hiddenInput.value = "true";
+        } else {
+            // If checkbox is unchecked, set the hidden value to false
+            hiddenInput.value = "false";
+        }
+    }
+</script>

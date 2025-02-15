@@ -18,20 +18,17 @@ public class StudentsController(
     IHttpContextAccessor _httpContextAccessor,
     IToastNotification _toastNotification) : Controller
 {
-    /*// GET
-    public async Task<IActionResult> Details()
+    public async Task<IActionResult> StudentGroups()
     {
-        var token = _httpContextAccessor.HttpContext.Request.Cookies["access_token"];
+        var token = _httpContextAccessor?.HttpContext?.Request.Cookies["access_token"];
         var userclaim = await _learningManagementSystem.GetUserInfosByToken(token);
-        var students = await _learningManagementSystem.StudentList(new()
-        {
-            FilterField = "AppUserId",
-            FilterValue = userclaim.Id
-        });
+        var students = await _learningManagementSystem.StudentList(new RequestFilter()
+            { FilterField = "AppUserId", FilterValue = userclaim.Id });
         var student = students.FirstOrDefault();
-
-        return View(student);
-    }*/
+        var response = await _learningManagementSystem.GetStudent(student.Id);
+        ViewBag.Groups = response.Groups;
+        return View();
+    }
     public async Task<IActionResult> Details(string userId)
     {
         var students = await _learningManagementSystem.StudentList(new RequestFilter
@@ -110,7 +107,7 @@ public class StudentsController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> AssignPointAsync([FromBody] StudentExamResponse[] studentExams)
+    public async Task<IActionResult> AssignPointAsync(StudentExamResponse[] studentExams)
     {
         try
         {
@@ -125,21 +122,28 @@ public class StudentsController(
         }
         catch (ValidationApiException e)
         {
-            _toastNotification.AddErrorToastMessage(e?.Content?.Errors.FirstOrDefault().Value[0].FirstOrDefault().ToString());
-            return RedirectToAction("AssignPoint");
+            _toastNotification.AddErrorToastMessage(e?.Content?.Errors.FirstOrDefault().Value[0].FirstOrDefault()
+                .ToString());
+            return RedirectToAction("AssignPoint", new { examId = studentExams[0].Exam.Id });
         }
         catch (ApiException e)
         {
-            _toastNotification.AddErrorToastMessage(e.Message);
-            return RedirectToAction("AssignPoint");
+            var errorContent = JsonConvert.DeserializeObject<Dictionary<string, string>>(e.Content);
+            if (errorContent != null && errorContent.ContainsKey("detail"))
+            {
+                var errorMessage = errorContent["detail"];
+                _toastNotification.AddErrorToastMessage(errorMessage);
+            }
+
+            return RedirectToAction("AssignPoint", new { examId = studentExams[0].Exam.Id });
         }
         catch (Exception e)
         {
             _toastNotification.AddErrorToastMessage(e.Message);
-            return RedirectToAction("AssignPoint");
+            return RedirectToAction("AssignPoint", new { examId = studentExams[0].Exam.Id });
         }
 
-        return RedirectToAction("Index", "Exams");
+        return RedirectToAction("Index", "Home");
     }
 
     public async Task<IActionResult> AssignAttendanceAsync([FromQuery] Guid lessonId)
@@ -154,26 +158,42 @@ public class StudentsController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> AssignAttendanceAsync(AttendanceResponse[] attendances)
+    public async Task<IActionResult> AssignAttendanceAsync(AttendanceResponse[] attendances, Guid lessonId)
     {
         try
         {
             List<AttendanceRequest> requests = new List<AttendanceRequest>();
             foreach (var attendance in attendances)
             {
-                requests.Add(new AttendanceRequest(attendance.Id, attendance.Student.Id, attendance.Lesson.Id,
+                requests.Add(new AttendanceRequest(attendance.Id, attendance.Student.Id, lessonId,
                     attendance.Absence));
             }
 
             var response = await _learningManagementSystem.UpdateAttendanceList(requests.ToArray());
         }
+        catch (ValidationApiException e)
+        {
+            _toastNotification.AddErrorToastMessage(e?.Content?.Errors.FirstOrDefault().Value.FirstOrDefault());
+            return RedirectToAction("AssignPoint");
+        }
+        catch (ApiException e)
+        {
+            var errorContent = JsonConvert.DeserializeObject<Dictionary<string, string>>(e.Content);
+            if (errorContent != null && errorContent.ContainsKey("detail"))
+            {
+                var errorMessage = errorContent["detail"];
+                _toastNotification.AddErrorToastMessage(errorMessage);
+            }
+
+            return RedirectToAction("AssignAttendance");
+        }
         catch (Exception e)
         {
             _toastNotification.AddErrorToastMessage(e.Message);
-            return View();
+            return RedirectToAction("AssignAttendance");
         }
 
-        return RedirectToAction("Index", "Exams");
+        return RedirectToAction("Index", "Lessons");
     }
 
     public async Task<IActionResult> AssignRetakeExam(Guid id)
@@ -186,20 +206,21 @@ public class StudentsController(
         try
         {
             var response = await _learningManagementSystem.AssignRetakeExam(new StudentRetakeExamDto(
-                id, student.Id, Status.Pending, 0
+                student.Id, id, Status.Pending, 0
             ));
             return RedirectToAction("Index", "Home");
         }
         catch (ValidationApiException e)
         {
-            _toastNotification.AddErrorToastMessage(e.Message);
+            _toastNotification.AddErrorToastMessage(e?.Content?.Errors.FirstOrDefault().Value.FirstOrDefault());
+            return RedirectToAction("AssignPoint");
         }
         catch (Exception e)
         {
             _toastNotification.AddErrorToastMessage(e.Message);
         }
 
-        return RedirectToAction("Index","RetakeExams");
+        return RedirectToAction("Index", "RetakeExams");
     }
 
     public async Task<IActionResult> CheckStudentId([FromQuery] Guid id)
@@ -211,7 +232,7 @@ public class StudentsController(
         var student = students.FirstOrDefault();
         return Json(new
         {
-            result = student?.Id==id,
+            result = student?.Id == id,
         });
     }
 }

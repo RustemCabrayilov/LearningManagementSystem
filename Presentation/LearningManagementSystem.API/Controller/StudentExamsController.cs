@@ -1,4 +1,6 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.StudentExam;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.StudentExam;
+using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,8 @@ public class StudentExamsController(IStudentExamService _studentExamService) : C
 {
     [HttpPost]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(ValidationFilter<StudentExamRequest>))]
+
     public async Task<IActionResult> Post(StudentExamRequest request)
     {
         var response = await _studentExamService.CreateAsync(request); 
@@ -24,6 +28,8 @@ public class StudentExamsController(IStudentExamService _studentExamService) : C
     }
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
+    [ServiceFilter(typeof(EntityExistFilter<StudentExam>))]
+
     public async Task<IActionResult> Get([FromRoute]Guid id)
     {
         var response = await _studentExamService.GetAsync(id); 
@@ -31,6 +37,7 @@ public class StudentExamsController(IStudentExamService _studentExamService) : C
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(ValidationFilter<StudentExamRequest>))]
     public async Task<IActionResult> Put(Guid id, StudentExamRequest request)
     {
         var response = await _studentExamService.UpdateAsync(id, request); 

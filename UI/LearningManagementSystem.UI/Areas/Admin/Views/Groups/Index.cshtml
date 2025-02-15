@@ -43,7 +43,7 @@ ViewBag.Title = "Group List";
         </td>
         <td>
             <!-- Button to open modal -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id">
+            <button type="button" class="btn btn-danger details-btn" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-item-id="@item.Id">
                 Details
             </button>
             @await Html.PartialAsync("_Details",item)
@@ -64,3 +64,77 @@ ViewBag.Title = "Group List";
     </tbody>
 </table>
 <partial name="_Pagination"/>
+
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let lessonId = this.getAttribute('data-item-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${lessonId} .modal-body`);
+                console.log(lessonId)
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/Groups/Details?id=${lessonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data); // Check the structure of the data
+
+                        let content = `
+            <h4>Group Info</h4>
+            <p><strong>Term:</strong> ${data?.term?.name || 'N/A'}</p>
+            <p><strong>Major:</strong> ${data?.major?.title || 'N/A'}</p>
+            <p><strong>Subject:</strong> ${data?.subject?.name || 'N/A'}</p>
+            <p><strong>Subject Code:</strong> ${data?.subject?.subjectCode || 'N/A'}</p>
+            <p><strong>Attendance Limit:</strong> ${data?.subject?.attendanceLimit || 'N/A'}</p>
+            <p><strong>Teacher:</strong> ${data?.teacher?.name} ${data?.teacher?.surname}</p>
+        `;
+
+                        // Display Exams
+                        if (data?.exams && data.exams.length > 0) {
+                            content += `<h5>Exams:</h5><ul>`;
+                            data.exams.forEach(exam => {
+                                content += `
+                    <li><strong>Exam Name:</strong> ${exam?.name || 'N/A'}</li>
+                    <li><strong>Exam Type:</strong> ${exam?.examType || 'N/A'}</li>
+                `;
+                            });
+                            content += `</ul>`;
+                        } else {
+                            content += `<p>No exams available</p>`;
+                        }
+
+                        // Display Group Schedules
+                        if (data?.groupSchedules && data.groupSchedules.length > 0) {
+                            content += `<h5>Group Times:</h5><ul>`;
+                            data.groupSchedules.forEach(groupSchedule => {
+                                content += `
+                    <li><strong>Class Time:</strong> ${groupSchedule?.classTime || 'N/A'}</li>
+                    <li><strong>Day of Week:</strong> ${groupSchedule?.dayOfWeek || 'N/A'}</li>
+                `;
+                            });
+                            content += `</ul>`;
+                        } else {
+                            content += `<p>No group schedules available</p>`;
+                        }
+
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+
+                    })
+                    .catch(error => {
+                        console.error('Error fetching details:', error);
+                        modalBody.innerHTML = `<p>Error loading details.</p>`;
+                    });
+
+
+            });
+        });
+    });
+</script>
+}

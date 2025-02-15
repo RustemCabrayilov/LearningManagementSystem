@@ -3,4 +3,9 @@
 namespace LearningManagementSystem.Application.Abstractions.Services.Chat;
 
 public record ChatResponse(
-    List<UserResponse> Users = null);
+    Guid Id,
+    string UserId,
+    string ToUserId,
+    string Message,
+    DateTime Date
+);

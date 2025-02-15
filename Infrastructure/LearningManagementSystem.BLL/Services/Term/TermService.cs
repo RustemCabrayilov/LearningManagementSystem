@@ -12,6 +12,7 @@ namespace LearningManagementSystem.BLL.Services.Term;
 
 public class TermService(
     IGenericRepository<Domain.Entities.Term> _termRepository,
+    IGenericRepository<Domain.Entities.Group> _groupRepository,
     IRedisCachingService _redisCachingService,
     IMapper _mapper,
     IUnitOfWork _unitOfWork) : ITermService
@@ -26,12 +27,16 @@ public class TermService(
 
     public async Task<TermResponse> UpdateAsync(Guid id, TermRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<TermResponse>(key);
         var entity = await _termRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Term not found");
         _mapper.Map(dto, entity);
         _termRepository.Update(entity);
         _unitOfWork.SaveChanges();
-        return _mapper.Map<TermResponse>(entity);
+        var outDto=_mapper.Map<TermResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<TermResponse> RemoveAsync(Guid id)
@@ -51,7 +56,11 @@ public class TermService(
             return data;
         var entity = await _termRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Term not found");
-        var outDto = _mapper.Map<TermResponse>(entity);
+        var groups = await _groupRepository.GetAsync(x => x.TermId == entity.Id);
+        var outDto = _mapper.Map<TermResponse>(entity) with
+        {
+            Groups = _mapper.Map<List<GroupResponse>>(groups)
+        };
         _redisCachingService.SetData(key, outDto);
         return outDto;
     }

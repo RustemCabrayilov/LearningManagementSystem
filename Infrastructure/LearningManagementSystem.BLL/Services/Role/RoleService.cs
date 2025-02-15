@@ -26,12 +26,15 @@ public class RoleService(
 
     public async Task<RoleResponse> UpdateAsync(string id, RoleRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<RoleResponse>(key);
         var entity = await _roleManager.FindByIdAsync(id.ToString());
         if (entity is null) throw new NotFoundException("Role not found");
         _mapper.Map(dto, entity);
         var result = await _roleManager.UpdateAsync(entity);
         if (!result.Succeeded) throw new Exception("Failed to update role");
         var outDto = _mapper.Map<RoleResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
         return outDto;
     }
 

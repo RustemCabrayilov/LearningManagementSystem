@@ -14,4 +14,5 @@ public class Survey : BaseEntity
     public Teacher Teacher { get; set; }
     public Guid TeacherId { get; set; }
     public List<Question> Questions { get; set; }
+    public List<Vote> Votes { get; set; }
 }

@@ -1,0 +1,32 @@
+﻿@using LearningManagementSystem.Persistence.Filters
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Survey.SurveyResponse>
+
+@{
+    ViewBag.Title = "Faculty List";
+}
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Survey</th>
+        <th>Votes</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>
+                <a class="btn btn-success"
+                   href="@Url.Action("Index", "Votes", new RequestFilter() { FilterGuidValue = item.Id, FilterField = "SurveyId" })">
+                    Assign Points
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<partial name="_Pagination"/>

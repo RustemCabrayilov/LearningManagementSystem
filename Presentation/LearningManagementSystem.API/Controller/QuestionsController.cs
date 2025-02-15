@@ -36,6 +36,7 @@ public class QuestionsController(IQuestionService _questionService) : Controller
     }
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<QuestionRequest>))]
     public async Task<IActionResult> Put(Guid id, QuestionRequest request)
     {
         var response = await _questionService.UpdateAsync(id,request);

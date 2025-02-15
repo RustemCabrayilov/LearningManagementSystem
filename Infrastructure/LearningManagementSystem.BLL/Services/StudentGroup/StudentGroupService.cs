@@ -36,6 +36,8 @@ public class StudentGroupService(
 
     public async Task<StudentGroupResponse> UpdateAsync(Guid id, StudentGroupDto dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<StudentGroupResponse>(key);
         var entity = await _StudentGroupRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Student's Group not found");
         _mapper.Map(dto, entity);
@@ -49,7 +51,9 @@ public class StudentGroupService(
             GroupId = entity.GroupId
         };
         await  _transcriptRepository.AddAsync(transcriptToCreate);
-        return _mapper.Map<StudentGroupResponse>(entity);
+        var outDto=_mapper.Map<StudentGroupResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<StudentGroupResponse> RemoveAsync(Guid id)

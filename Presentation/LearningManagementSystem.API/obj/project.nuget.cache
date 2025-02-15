@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "DmFoTyk11BM=",
+  "dgSpecHash": "fVn0DAhyBXU=",
   "success": true,
   "projectFilePath": "C:\\Users\\ASUS\\Desktop\\FinalProject\\LearningManagementSystem\\Presentation\\LearningManagementSystem.API\\LearningManagementSystem.API.csproj",
   "expectedPackageFiles": [
@@ -98,6 +98,7 @@
     "C:\\Users\\ASUS\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\qrcoder\\1.6.0\\qrcoder.1.6.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\rabbitmq.client\\7.0.0\\rabbitmq.client.7.0.0.nupkg.sha512",
+    "C:\\Users\\ASUS\\.nuget\\packages\\refit\\8.0.0\\refit.8.0.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\serilog\\4.2.0\\serilog.4.2.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\serilog.aspnetcore\\9.0.0\\serilog.aspnetcore.9.0.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\serilog.extensions.hosting\\9.0.0\\serilog.extensions.hosting.9.0.0.nupkg.sha512",

@@ -8,6 +8,9 @@
     <thead>
     <tr>
         <th>Id</th>
+        <th>Retake Exam Type</th>
+        <th>Deadline</th>
+        <th>Price</th>
         <th>Name</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -35,7 +38,7 @@
             </td>
             <td>
                 <!-- Button to open modal -->
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id">
+                <button type="button" class="btn btn-danger details-btn" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-retakeExam-id="@item.Id">
                     Details
                 </button>
                 @await Html.PartialAsync("_Details",item)
@@ -45,3 +48,45 @@
     </tbody>
 </table>
 <partial name="_Pagination"/>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let lessonId = this.getAttribute('data-retakeExam-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${lessonId} .modal-body`);
+                console.log(lessonId)
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/RetakeExams/Details?id=${lessonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update modal content with fetched student details
+                        let content = `
+                                <h4>MaRetake Exam Info</h4>
+                                <p><strong>Retake Exam Type:</strong> ${data?.retakeExamType}</p>
+                                <p><strong>Deadline:</strong> ${data?.retakeExam?.deadline}</p>
+                                <p><strong>Price:</strong> ${data?.retakeExam?.price}</p>
+                                <p><strong>Exam:</strong> ${data?.retakeExam?.exam?.name}</p>
+                                <p><strong>Exam Type:</strong> ${data?.examType}</p>
+                                <p><strong>Point Of Exam:</strong> ${data?.retakeExam?.exam?.maxPoint}</p>
+                                <p><strong>Start Date:</strong> ${data?.retakeExam?.exam?.startDate}</p>
+                                <p><strong>End Date:</strong> ${data?.retakeExam?.exam?.endDate}</p>
+                            `;
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching  details:', error);
+                        modalBody.innerHTML = `<p>Error loading  details.</p>`;
+                    });
+            });
+        });
+    });
+</script>
+}

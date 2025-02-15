@@ -1,9 +1,28 @@
-﻿<nav class="sidebar sidebar-offcanvas" id="sidebar">
+﻿<style>
+  /* Default sidebar hidden on smaller screens */
+  .sidebar-offcanvas {
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-250px); /* Hidden by default */
+  }
+
+  .sidebar-offcanvas.active {
+    transform: translateX(0); /* Show when active */
+  }
+
+  @@media (min-width: 768px) {
+    .sidebar-offcanvas {
+      transform: translateX(0); /* Always visible on larger screens */
+    }
+  }
+</style>
+
+
+
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
     <li class="nav-item nav-profile">
       <a href="#" class="nav-link">
         <div class="nav-profile-image">
-          <img src="assets/images/faces/face1.jpg" alt="profile">
           <span class="login-status online"></span>
           <!--change to offline or busy as needed-->
         </div>
@@ -17,7 +36,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="pages/charts/chartjs.html">
+      <a class="nav-link" asp-action="Index" asp-controller="Stats">
         <span class="menu-title">Charts</span>
         <i class="mdi mdi-chart-bar menu-icon"></i>
       </a>
@@ -26,7 +45,6 @@
       <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
         <span class="menu-title">Sample Pages</span>
         <i class="menu-arrow"></i>
-        <i class="mdi mdi-medical-bag menu-icon"></i>
       </a>
       <div class="collapse" id="general-pages">
         <ul class="nav flex-column sub-menu">
@@ -53,6 +71,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Admin" asp-controller="RetakeExams" asp-action="Index">Retake Exams</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="StudentRetakeExams" asp-action="Index">Students' Retake Exams</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Admin" asp-controller="Deans" asp-action="Index">Deans</a>
@@ -119,3 +140,15 @@
     </li>
   </ul>
 </nav>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.querySelector(".navbar-toggler");
+
+    toggleBtn.addEventListener("click", function () {
+      sidebar.classList.toggle("active"); // Add or remove active class
+    });
+  });
+</script>
+

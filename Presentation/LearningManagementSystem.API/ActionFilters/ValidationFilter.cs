@@ -3,6 +3,7 @@ using LearningManagementSystem.Application.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
 using LearningManagementSystem.API.Extensions;
+using LearningManagementSystem.Application.Abstractions.Services.Redis;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -15,7 +16,7 @@ public class ValidationFilter<T> : Attribute, IAsyncActionFilter
 
     public ValidationFilter(
         ILogger<ValidationFilter<T>> logger,
-        IValidator<T> validator)
+        IValidator<T> validator, IRedisCachingService redisCachingService)
     {
         _logger = logger;
         _validator = validator;
@@ -24,7 +25,7 @@ public class ValidationFilter<T> : Attribute, IAsyncActionFilter
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         _logger.LogInformation("Before action execution with Url: " + context.HttpContext.Request.Path);
-        if (context.ActionArguments.TryGetValue("dto", out var model) && model is T typedModel)
+        if (context.ActionArguments.TryGetValue("request", out var model) && model is T typedModel)
         {
             ValidationResult validationResult = await _validator.ValidateAsync(typedModel);
             if (typedModel is ObjectResult objectResult)
@@ -51,7 +52,8 @@ public class ValidationFilter<T> : Attribute, IAsyncActionFilter
         var executedContext = await next();
        var response=  executedContext.Result?.ExtractObject();
        _logger.LogInformation("Action executed with Response: {Response}", response);
-       
+     
+
 
         _logger.LogInformation("After action execution with statuscode: " + context.HttpContext.Response.StatusCode);
     }

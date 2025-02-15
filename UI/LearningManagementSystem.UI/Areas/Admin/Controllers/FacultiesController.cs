@@ -43,4 +43,10 @@ public class FacultiesController(ILearningManagementSystem _learningManagementSy
         var response = await _learningManagementSystem.CreateFaculty(request);
         return RedirectToAction("Index");
     }
+    
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var response = await _learningManagementSystem.GetFaculty(id);
+        return Json(response);
+    }
 }

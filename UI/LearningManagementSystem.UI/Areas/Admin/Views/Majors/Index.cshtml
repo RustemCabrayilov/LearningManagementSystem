@@ -40,8 +40,55 @@
                 </button>
                 @await Html.PartialAsync("_Delete",item)
             </td>
+            <td>
+                <!-- Button to open modal -->
+                <button type="button" class="btn btn-primary details-btn" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-lesson-id="@item.Id">
+                    Details
+                </button>
+                @await Html.PartialAsync("_Details", item)
+            </td>
         </tr>
     }
     </tbody>
 </table>
 <partial name="_Pagination"/>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let lessonId = this.getAttribute('data-lesson-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${lessonId} .modal-body`);
+                console.log(lessonId)
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/Majors/Details?id=${lessonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update modal content with fetched student details
+                        let content = `
+                                <h4>Major Info</h4>
+                                <p><strong>Title:</strong> ${data?.title}</p>
+                                <p><strong>Point:</strong> ${data?.point}</p>
+                                <p><strong>Education Language:</strong> ${data?.educationLanguage}</p>
+                                <p><strong>StateFunded:</strong> ${data?.stateFunded}</p>
+                                <p><strong>Tuition fee:</strong> ${data?.tuitionFee}</p>
+                                <p><strong>Faculty:</strong> ${data?.faculty?.name}</p>
+                            `;
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching  details:', error);
+                        modalBody.innerHTML = `<p>Error loading  details.</p>`;
+                    });
+            });
+        });
+    });
+</script>
+}

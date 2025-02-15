@@ -1,5 +1,7 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using LearningManagementSystem.API.ActionFilters;
 using LearningManagementSystem.Application.Abstractions.Services.Theme;
+using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +13,8 @@ public class ThemesController(IThemeService _themeService) : ControllerBase
 {
     [HttpPost]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<ThemeRequest>))]
+
     public async Task<IActionResult> Post([FromForm]ThemeRequest request)
     {
         var response = await _themeService.CreateAsync(request); 
@@ -25,6 +29,7 @@ public class ThemesController(IThemeService _themeService) : ControllerBase
     }
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher,Student")]
+    [ServiceFilter(typeof(EntityExistFilter<Theme>))]
     public async Task<IActionResult> Get([FromRoute]Guid id)
     {
         var response = await _themeService.GetAsync(id); 
@@ -32,6 +37,7 @@ public class ThemesController(IThemeService _themeService) : ControllerBase
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<ThemeRequest>))]
     public async Task<IActionResult> Put(Guid id, ThemeRequest request)
     {
         var response = await _themeService.UpdateAsync(id, request); 

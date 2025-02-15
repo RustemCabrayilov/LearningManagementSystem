@@ -8,6 +8,6 @@ public class StudentRetakeExamMappingProfile: Profile
     public StudentRetakeExamMappingProfile()
     {
         CreateMap<StudentRetakeExamDto, Domain.Entities.StudentRetakeExam>();
-        CreateMap<Domain.Entities.StudentExam, StudentRetakeExamResponse>();   
+        CreateMap<Domain.Entities.StudentRetakeExam, StudentRetakeExamResponse>();   
     }
 }

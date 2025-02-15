@@ -3,12 +3,12 @@
 @{
 ViewBag.Title = "Faculty List";
 }
-<a class="btn btn-primary" asp-action="Create">Create</a>
 <table class="table table-hover">
     <thead>
     <tr>
         <th>Group</th>
         <th>Credit</th>
+        <th>Code</th>
         <th>Point </th>
     </tr>
     </thead>
@@ -17,8 +17,9 @@ ViewBag.Title = "Faculty List";
     {
     <tr>
         <td>@item.Group.Name</td>
+        <td>@item.Group.Code</td>
         <td>@item.Group.Credit</td>
-        <td>@item.TotalPoint</td>
+        <td>@item.TotalPoint pts</td>
     </tr>
     }
     </tbody>

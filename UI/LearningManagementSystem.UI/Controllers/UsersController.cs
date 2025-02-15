@@ -10,7 +10,7 @@ public class UsersController(ILearningManagementSystem _learningManagementSystem
     // GET
     public async Task<IActionResult> Details([FromQuery]string? userId)
     {
-        if (userId == string.Empty)
+        if (userId is null)
         {
             var token = _httpContextAccessor?.HttpContext?.Request.Cookies["access_token"];
             var userclaim = await _learningManagementSystem.GetUserInfosByToken(token);

@@ -29,14 +29,14 @@ public class TranscriptService(
         await _unitOfWork.SaveChangesAsync();
         var group = await _groupRepository.GetAsync(x => !x.IsDeleted && x.Id == entity.GroupId);
         var studentsubject =
-            await _studentSubjectRepository.GetAsync(x => !x.IsDeleted && x.SubjectId == group.SubjectId);
+            await _studentSubjectRepository.GetAsync(x => !x.IsDeleted && x.StudentId==entity.StudentId);
         if (studentsubject != null)
         {
             _studentSubjectRepository.Remove(studentsubject);
             _unitOfWork.SaveChanges();
         }
 
-        var studentSubject = new StudentSubject()
+        var studentSubjectToCreate = new StudentSubject()
         {
             StudentId = dto.StudentId,
             SubjectId = group.SubjectId,
@@ -50,19 +50,21 @@ public class TranscriptService(
                 .GetAll(x => x.Id == studentExam.ExamId && !x.IsDeleted, new() { AllUsers = true }).ToListAsync();
             if (exams.Any(x => x.ExamType == ExamType.Final))
             {
-                studentSubject.SubjectTakingType =
+                studentSubjectToCreate.SubjectTakingType =
                     entity.TotalPoint >= 60 ? SubjectTakingType.Passed : SubjectTakingType.Failed;
                 break;
             }
         }
 
-        await _studentSubjectRepository.AddAsync(studentSubject);
+        await _studentSubjectRepository.AddAsync(studentSubjectToCreate);
         await _unitOfWork.SaveChangesAsync();
         return _mapper.Map<TranscriptResponse>(entity);
     }
 
     public async Task<TranscriptResponse> UpdateAsync(Guid id, TranscriptRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<TranscriptResponse>(key);
         var entity = await _transcriptRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Transcript not found");
         _mapper.Map(dto, entity);
@@ -100,6 +102,7 @@ public class TranscriptService(
         _studentSubjectRepository.Update(studentSubject);
         _unitOfWork.SaveChanges();
         var outDto = _mapper.Map<TranscriptResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
         return outDto;
     }
 

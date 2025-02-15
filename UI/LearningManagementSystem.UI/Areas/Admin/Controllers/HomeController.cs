@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LearningManagementSystem.UI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LearningManagementSystem.UI.Areas.Admin.Controllers;
 [Area("admin")]
@@ -12,7 +13,6 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
-
     public IActionResult Index()
     {
         return View();

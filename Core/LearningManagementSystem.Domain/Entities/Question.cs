@@ -10,4 +10,5 @@ public class Question:BaseEntity
     public int MaxPoint { get; set; }
     public Survey Survey { get; set; }
     public Guid SurveyId { get; set; }
+    public List<Vote> Votes { get; set; }
 }

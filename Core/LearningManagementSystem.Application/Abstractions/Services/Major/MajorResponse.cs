@@ -1,4 +1,5 @@
 ﻿using LearningManagementSystem.Application.Abstractions.Services.Faculty;
+using LearningManagementSystem.Application.Abstractions.Services.Student;
 
 namespace LearningManagementSystem.Application.Abstractions.Services.Major;
 
@@ -9,5 +10,4 @@ public record MajorResponse(
     string EducationLanguage,
     decimal TuitionFee,
     bool StateFunded,
-    FacultyResponse Faculty
-);
+    FacultyResponse Faculty);

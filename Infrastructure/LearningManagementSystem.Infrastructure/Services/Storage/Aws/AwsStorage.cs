@@ -110,8 +110,7 @@ public class AwsStorage:IAwsStorage
         var fileExists = await GetFileUrlAsync(decodedKey,dto.Prefix);
         if (string.IsNullOrEmpty(fileExists))
         {
-            // Delete the existing file before uploading the new one
-            await DeleteFileAsync(decodedKey);
+            throw new NotFoundException("File Not Found to Update");
         }
     
         // Upload the new file (same logic as in UploadFileUrl method)

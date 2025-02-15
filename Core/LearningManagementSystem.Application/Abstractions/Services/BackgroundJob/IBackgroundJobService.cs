@@ -4,5 +4,6 @@ public interface IBackgroundJobService
 {
   Task Recommendteacher();
   Task AveragOfStudent();
+  Task FailNotification();
 
 }

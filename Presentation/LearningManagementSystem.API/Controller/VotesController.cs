@@ -1,4 +1,6 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.Vote;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.Vote;
+using LearningManagementSystem.Domain.Entities;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,8 @@ public class VotesController (IVoteService _voteService) : ControllerBase
 {
     [HttpPost]
     [Authorize(Roles = "Student")]
+    [ServiceFilter(typeof(ValidationFilter<VoteRequest>))]
+
     public async Task<IActionResult> Post(VoteRequest request)
     {
         var response = await _voteService.CreateAsync(request); 
@@ -29,8 +33,9 @@ public class VotesController (IVoteService _voteService) : ControllerBase
         var response = await _voteService.GetAllAsync(filter); 
         return Ok(response);
     }
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(EntityExistFilter<Vote>))]
     public async Task<IActionResult> Get(Guid id)
     {
         var response = await _voteService.GetAsync(id); 
@@ -38,6 +43,8 @@ public class VotesController (IVoteService _voteService) : ControllerBase
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean,Teacher")]
+    [ServiceFilter(typeof(ValidationFilter<VoteRequest>))]
+
     public async Task<IActionResult> Put(Guid id, VoteRequest request)
     {
         var response = await _voteService.UpdateAsync(id, request); 

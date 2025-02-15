@@ -9,5 +9,4 @@ public record RetakeExamResponse(
     ExamResponse Exam,
     DateTime Deadline,
     RetakeExamType RetakeExamType,
-    decimal Price,
-    List<IFormFile> Files);
+    decimal Price);

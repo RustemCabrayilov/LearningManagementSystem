@@ -1,4 +1,5 @@
-﻿using LearningManagementSystem.Application.Abstractions.Services.Survey;
+﻿using LearningManagementSystem.API.ActionFilters;
+using LearningManagementSystem.Application.Abstractions.Services.Survey;
 using LearningManagementSystem.Persistence.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,7 @@ public class SurveysController(ISurveyService _surveyService) : ControllerBase
     }
     [HttpPut]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<SurveyRequest>))]
     public async Task<IActionResult> Put(Guid id, SurveyRequest request)
     {
         var response = await _surveyService.UpdateAsync(id, request); 

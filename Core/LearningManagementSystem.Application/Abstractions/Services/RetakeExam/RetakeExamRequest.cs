@@ -7,5 +7,4 @@ public record RetakeExamRequest(
     Guid ExamId,
     DateTime Deadline,
     RetakeExamType RetakeExamType,
-    decimal Price,
-    List<IFormFile> Files);
+    decimal Price);

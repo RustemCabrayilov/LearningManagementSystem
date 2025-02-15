@@ -2,7 +2,7 @@
 @model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Exam.ExamResponse>
 
 @{
-    ViewBag.Title = "Faculty List";
+    ViewBag.Title = "Exam List";
 }
 <a class="btn btn-primary" asp-action="Create">Create</a>
 <table class="table table-hover">
@@ -41,7 +41,7 @@
             </td>
             <td>
                 <!-- Button to open modal -->
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-exam-id="@item.Id">
+                <button type="button" class="btn btn-primary details-btn" data-bs-toggle="modal" data-bs-target="#detailModal-@item.Id" data-exam-id="@item.Id">
                     Details
                 </button>
                 @await Html.PartialAsync("_Details", item)
@@ -59,7 +59,7 @@
         detailButtons.forEach(button => {
             button.addEventListener('click', function (e) {
                 let examId = this.getAttribute('data-exam-id'); // Use data-student-id instead of id
-                const modalBody = document.querySelector(`#detailModal-${studentId} .modal-body`);
+                const modalBody = document.querySelector(`#detailModal-${examId} .modal-body`);
 
                 // Show loading message while fetching data
                 modalBody.innerHTML = `<p>Loading...</p>`;
@@ -70,17 +70,18 @@
                     .then(data => {
                         // Update modal content with fetched student details
                         let content = `
-                                <h4>User Info</h4>
-                                <p><strong>Group Name:</strong> ${dataexam?.exam?.group.name}</p>
-                                <p><strong>Code:</strong> ${data.exam.group?.code}</p>
-                                <p><strong>Credit:</strong> ${data.exam.group?.credit}</p>
+                                <h4>Exam Info</h4>
+                                <p><strong>Group Name:</strong> ${data?.exam?.group.name}</p>
+                                <p><strong>Code:</strong> ${data?.exam.group?.code}</p>
+                                <p><strong>Credit:</strong> ${data?.exam.group?.credit}</p>
                                 
                             `;
-                        if (data.exam.retakeExams && data.exam.retakeExams.length > 0) {
+                        if (data?.exam?.retakeExams && data?.exam?.retakeExams.length > 0) {
                             content += `<h5>Retake Exams:</h5><ul>`;
-                            data.exam.retakeExams.forEach(retakeExam => {
-                                content += `<li>${retakeExam.name}</li>
-                                           <li>${retakeExam.deadline}</li>`;
+                            data?.exam?.retakeExams?.forEach(retakeExam => {
+                                content += `
+                                           <li><strong>Deadline:</strong>${retakeExam?.deadline}</li>
+                                             <li><strong>Price:</strong>${retakeExam?.price}</li>`;
                             });
                             content += `</ul>`;
                         }
@@ -90,7 +91,7 @@
                         modalBody.innerHTML = content;
                     })
                     .catch(error => {
-                        console.error('Error fetching student details:', error);
+                        console.error('Error fetching  details:', error);
                         modalBody.innerHTML = `<p>Error loading student details.</p>`;
                     });
             });

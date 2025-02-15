@@ -7,7 +7,5 @@ public enum DocumentType
     Dean,
     Student,
     Teacher,
-    StudentExam,
-    RetakeExam,
     Theme
 }

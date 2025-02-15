@@ -56,3 +56,48 @@
     </tbody>
 </table>
 <partial name="_Pagination"/>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detailButtons = document.querySelectorAll('.details-btn');
+
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                let lessonId = this.getAttribute('data-lesson-id'); // Use data-student-id instead of id
+                const modalBody = document.querySelector(`#detailModal-${lessonId} .modal-body`);
+                console.log(lessonId)
+                // Show loading message while fetching data
+                modalBody.innerHTML = `<p>Loading...</p>`;
+
+                // Fetch student details from the server
+                fetch(`/Admin/Surveys/Details?id=${lessonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update modal content with fetched student details
+                        let content = `
+                                <h4>Major Info</h4>
+                                <p><strong>Term:</strong> ${data?.term?.name}</p>
+                                <p><strong>Start Date Of Term:</strong> ${data?.term?.endDate}</p>
+                                <p><strong>End Date Of Term:</strong> ${data?.term?.StartDate}</p>
+                            `;
+                        if (data?.questions && data?.questions.length > 0) {
+                            content += `<h5>Questions :</h5><ul>`;
+                            data?.questions?.forEach(question => {
+                                content += `<li><strong>Description:</strong>${question?.descrription}</li>
+                                           <li><strong>Point:</strong>${question?.maxPoint}</li>`
+                            });
+                            content += `</ul>`;
+                        }
+                        // Update modal body with the final content
+                        modalBody.innerHTML = content;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching  details:', error);
+                        modalBody.innerHTML = `<p>Error loading  details.</p>`;
+                    });
+            });
+        });
+    });
+</script>
+}

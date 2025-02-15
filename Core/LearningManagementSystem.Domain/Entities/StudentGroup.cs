@@ -1,7 +1,9 @@
-﻿using LearningManagementSystem.Domain.Entities.Common;
+﻿using LearningManagementSystem.Domain.Configurations;
+using LearningManagementSystem.Domain.Entities.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearningManagementSystem.Domain.Entities;
-
+[EntityTypeConfiguration(typeof(StudentGroupConfiguration))]
 public class StudentGroup:BaseEntity
 {
     public Student Student { get; set; }
@@ -10,6 +12,4 @@ public class StudentGroup:BaseEntity
     public Guid GroupId { get; set; }   
     public int AbsenceCount { get; set; }
     public int AttendanceCount { get; set; }
-    public float ActivityPoint { get; set; }
-    public float AttendancePoint { get; set; }
 }

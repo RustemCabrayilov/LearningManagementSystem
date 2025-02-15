@@ -15,7 +15,7 @@ public class EmailService:IEmailService
         _emailSettings = settings.Value;
     }
 
-    public async Task SendEmailAsync(string url,string subject, string toEmail)
+    public async Task SendEmailAsync(string body,string subject, string toEmail)
     {
         SmtpClient client = new SmtpClient(_emailSettings.Host, _emailSettings.Port);
         client.EnableSsl = true;
@@ -32,7 +32,7 @@ public class EmailService:IEmailService
         StringBuilder mailBody = new StringBuilder();
 
         mailBody.AppendFormat("<br />");
-        mailBody.AppendFormat($"<a href={url}>Reset Application Password</a>");
+        mailBody.AppendFormat(body);
         mailMessage.Body = mailBody.ToString();
 
         // Send email

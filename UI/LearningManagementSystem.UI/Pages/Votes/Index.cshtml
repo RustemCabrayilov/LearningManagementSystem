@@ -1,0 +1,26 @@
+﻿@model System.Collections.Generic.IList<LearningManagementSystem.Application.Abstractions.Services.Vote.VoteResponse>
+
+@{
+    ViewBag.Title = "Faculty List";
+}
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Survey</th>
+        <th>Name</th>
+        <th>Question</th>
+        <th>Point</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.SurveyResponse.Name</td>
+            <td>@item.Question.Description</td>
+            <td>@item.Point pts</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<partial name="_Pagination"/>

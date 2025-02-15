@@ -15,6 +15,7 @@ using LearningManagementSystem.Application.Abstractions.Services.Major;
 using LearningManagementSystem.Application.Abstractions.Services.Question;
 using LearningManagementSystem.Application.Abstractions.Services.RetakeExam;
 using LearningManagementSystem.Application.Abstractions.Services.Role;
+using LearningManagementSystem.Application.Abstractions.Services.Stats;
 using LearningManagementSystem.Application.Abstractions.Services.Student;
 using LearningManagementSystem.Application.Abstractions.Services.StudentExam;
 using LearningManagementSystem.Application.Abstractions.Services.StudentGroup;
@@ -42,6 +43,7 @@ using LearningManagementSystem.BLL.Services.Major;
 using LearningManagementSystem.BLL.Services.Question;
 using LearningManagementSystem.BLL.Services.RetakeExam;
 using LearningManagementSystem.BLL.Services.Role;
+using LearningManagementSystem.BLL.Services.Stats;
 using LearningManagementSystem.BLL.Services.Student;
 using LearningManagementSystem.BLL.Services.StudentExam;
 using LearningManagementSystem.BLL.Services.StudentGroup;
@@ -91,6 +93,7 @@ public static class ServiceRegister
         services.AddScoped<IThemeService,ThemeService>();
         services.AddScoped<IQuestionService,QuestionService>();
         services.AddScoped<IChatService,ChatService>();
+        services.AddScoped<IStatsService,StatsService>();
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(SignInValidator)));  
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(SignUpValidator)));
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(DeanValidator)));
@@ -109,8 +112,16 @@ public static class ServiceRegister
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(VoteValidator)));
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(AttendanceValidator)));
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(SingleAttendanceValidator)));
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(StudentExamValidator)));
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(SingleStudentExamValidator)));
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(ChatValidator)));
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(ChatMessageValidator)));
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(GroupScheduleValidator)));
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(ExamValidator)));
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(RetakeExamValidator)));
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(StudentRetakeExamValidator)));
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(StudentGroupValidator)));
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining(typeof(RoleValidator)));
         ValidatorOptions.Global.LanguageManager.Culture = new System.Globalization.CultureInfo("az");
     }
     public static void AddCustomSerilog(this ILoggingBuilder logBuilder)

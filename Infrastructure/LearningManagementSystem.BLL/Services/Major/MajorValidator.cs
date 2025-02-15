@@ -11,6 +11,6 @@ public class MajorValidator:AbstractValidator<MajorRequest>
         RuleFor(x=>x.Point).NotEmpty();
         RuleFor(x=>x.EducationLanguage).NotEmpty();
         RuleFor(x=>x.FacultyId).NotNull();
-        RuleFor(x=>x.TuitionFee).NotEmpty().GreaterThan(0);
+        RuleFor(x=>x.TuitionFee).NotEmpty().GreaterThanOrEqualTo(0);
     }
 }

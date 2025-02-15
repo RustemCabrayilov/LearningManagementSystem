@@ -8,49 +8,100 @@ Layout = "_Layout";
 }
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student's Schedule</title>
-  <link rel="stylesheet" href="~/css/schedule.css">
+  <style>
+    .schedule {
+      display: grid;
+      grid-template-columns: 150px repeat(7, 1fr); /* 150px for the time slot column, 1fr for each weekday column */
+      grid-template-rows: repeat(@TimeHelper.TimeList.Count + 1, 80px); /* Number of rows depends on time slots */
+      gap: 1px;
+      background-color: #b0bec5;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .schedule .header {
+      background-color: #0288d1;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      padding: 10px;
+    }
+
+    .schedule .time-slot {
+      background-color: white;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      border: 1px solid #ccc;
+    }
+
+    .schedule .lesson {
+      background-color: #81c784;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .schedule .lesson:hover {
+      background-color: #66bb6a;
+    }
+
+    .schedule .empty {
+      background-color: #f1f1f1;
+      text-align: center;
+      vertical-align: middle;
+      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .schedule .time-slot {
+      background-color: white;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      border: 1px solid #ccc;
+    }
+
+  </style>
 </head>
 <body>
+<div class="schedule">
+  <!-- Header for Weekdays -->
+  <div class="header"></div> <!-- Empty cell for the top-left corner -->
+  <div class="header">Monday</div>
+  <div class="header">Tuesday</div>
+  <div class="header">Wednesday</div>
+  <div class="header">Thursday</div>
+  <div class="header">Friday</div>
+  <div class="header">Saturday</div>
+  <div class="header">Sunday</div>
 
-<div class="container">
-  <!-- Left side: Lesson list -->
-
-  <!-- Right side: Weekly Schedule -->
-  <div class="schedule">
-    <!-- Header for Days of the Week -->
-    <div class="header">Time</div>
-    <div class="header">Monday</div>
-    <div class="header">Tuesday</div>
-    <div class="header">Wednesday</div>
-    <div class="header">Thursday</div>
-    <div class="header">Friday</div>
-
-    <!-- Time Slots and Empty Cells -->
-    @foreach (var time in TimeHelper.TimeList)
-    {
-    <div class="time-slot">@time</div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Monday"></div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Tuesday"></div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Wednesday"></div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Thursday"></div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Friday"></div>
-    }
-  </div>
+  <!-- Time Slots and Empty Cells -->
+  @foreach (var time in TimeHelper.TimeList)
+  {
+  <div class="time-slot">@time</div>
+  <div class="empty" data-time="@time" data-group-id="" data-day="Monday"></div>
+  <div class="empty" data-time="@time" data-group-id="" data-day="Tuesday"></div>
+  <div class="empty" data-time="@time" data-group-id="" data-day="Wednesday"></div>
+  <div class="empty" data-time="@time" data-group-id="" data-day="Thursday"></div>
+  <div class="empty" data-time="@time" data-group-id="" data-day="Friday"></div>
+  <div class="empty" data-time="@time" data-group-id="" data-day="Saturday"></div>
+  <div class="empty" data-time="@time" data-group-id="" data-day="Sunday"></div>
+  }
 </div>
 
-<form id="assignGroupForm">
-  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-  <button>Save</button>
-</form>
 
 <script>
   const lessonListItems = document.querySelectorAll('.lesson-list li');
   const scheduleCells = document.querySelectorAll('.schedule .empty');
   const groupsData = @Html.Raw(Json.Serialize(ViewBag.Groups)); // Fetch groups data from ViewBag
 
+  // Function to populate the schedule
+  // Function to populate the schedule
   // Function to populate the schedule
   function populateSchedule(groupsData) {
     groupsData.forEach(group => {
@@ -60,7 +111,8 @@ Layout = "_Layout";
         .then(data => {
           // Iterate over the fetched data and populate the schedule
           data.forEach(groupSchedule => {
-            const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            // Include Saturday and Sunday in the dayNames array
+            const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
             const lessonDay = dayNames[groupSchedule.dayOfWeek - 1];
 
             // Find the matching schedule cell for the day and time
@@ -68,9 +120,11 @@ Layout = "_Layout";
             if (scheduleCell) {
               scheduleCell.classList.remove('empty');
               scheduleCell.classList.add('lesson');
-              scheduleCell.textContent = group.Name;
 
-              // Optionally set data attributes
+              // Create a structure for displaying group name and schedule
+              scheduleCell.innerHTML = `<strong>${group.name}</strong><br>${groupSchedule.classTime}`;
+
+              // Optionally set data attributes for easy reference
               scheduleCell.setAttribute('data-group-id', group.Id);
               scheduleCell.setAttribute('data-lesson-name', group.Name);
             }

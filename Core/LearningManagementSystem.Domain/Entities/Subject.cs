@@ -9,5 +9,6 @@ public class Subject : BaseEntity
     public string Name { get; set; }
     public string SubjectCode { get; set; }
     public int AttendanceLimit { get; set; }
-    public List<Lesson> Lessons { get; set; }
+    public List<StudentSubject> StudentSubjects { get; set; }
+    public List<Group> Groups { get; set; }
 }

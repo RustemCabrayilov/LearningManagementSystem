@@ -1,5 +1,7 @@
 ﻿using LearningManagementSystem.API.ActionFilters;
 using LearningManagementSystem.Application.Abstractions.Services.Role;
+using LearningManagementSystem.BLL.Services.Role;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearningManagementSystem.API.Controller;
@@ -28,6 +30,8 @@ public class RolesController(IRoleService _roleService) : ControllerBase
         return Ok(response);
     }
     [HttpPut]
+    [ServiceFilter(typeof(RoleExistFilter))]
+    [ServiceFilter(typeof(RoleValidator<RoleRequest>))]
     public async Task<IActionResult> Put(string id, RoleRequest request)
     {
         var response = await _roleService.UpdateAsync(id, request); 

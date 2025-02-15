@@ -11,8 +11,6 @@ public class StudentRetakeExam:BaseEntity
     public Guid StudentId { get; set; }
     public RetakeExam RetakeExam { get; set; }
     public Guid RetakeExamId { get; set; }
-    public Term Term { get; set; }
-    public Guid TermId { get; set; }
     public DateTime ApplyDate { get; set; }=DateTime.Now;
     public Status Status { get; set; }
     public float NewPoint { get; set; }

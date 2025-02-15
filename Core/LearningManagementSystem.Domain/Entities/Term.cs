@@ -13,6 +13,7 @@ public class Term:BaseEntity
     public bool IsActive { get; set; }
     public TermSeason TermSeason { get; set; }
     public List<Group> Groups { get; set; }
+    public List<Survey> Surveys { get; set; }
     /*public List<StudentExam> StudentExams { get; set; }
     public List<StudentRetakeExam> StudentRetakeExams { get; set; }*/
 }

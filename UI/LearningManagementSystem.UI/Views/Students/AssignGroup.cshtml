@@ -4,12 +4,92 @@
 ViewBag.Title = "Assign Groups";
 Layout = "_Layout";
 }
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weekly Lesson Schedule</title>
-  <link rel="stylesheet" href="~/css/schedule.css">
+  <style>
+    .lesson-list {
+      width: 30%;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .lesson-list h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .lesson-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .lesson-list li {
+      background-color: #e3f2fd;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .lesson-list li:hover {
+      background-color: #bbdefb;
+    }
+    .schedule {
+      display: grid;
+      grid-template-columns: 150px repeat(7, 1fr); /* 150px for the time slot column, 1fr for each weekday column */
+      grid-template-rows: repeat(@TimeHelper.TimeList.Count + 1, 80px); /* Number of rows depends on time slots */
+      gap: 1px;
+      background-color: #b0bec5;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .schedule .header {
+      background-color: #0288d1;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      padding: 10px;
+    }
+
+    .schedule .time-slot {
+      background-color: white;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      border: 1px solid #ccc;
+    }
+
+    .schedule .lesson {
+      background-color: #81c784;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .schedule .lesson:hover {
+      background-color: #66bb6a;
+    }
+
+    .schedule .empty {
+      background-color: #f1f1f1;
+      text-align: center;
+      vertical-align: middle;
+      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -33,28 +113,28 @@ Layout = "_Layout";
     <div class="header">Wednesday</div>
     <div class="header">Thursday</div>
     <div class="header">Friday</div>
+    <div class="header">Saturday</div>
+    <div class="header">Sunday</div>
 
     <!-- Time Slots and Empty Cells -->
     @foreach (var time in TimeHelper.TimeList)
     {
     <div class="time-slot">@time</div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Monday"></div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Tuesday"></div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Wednesday"></div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Thursday"></div>
-    <div class="empty" data-time="@time" data-group-id="" data-day="Friday"></div>
+    @foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" })
+    {
+    <div class="empty" data-time="@time" data-group-id="" data-day="@day"></div>
+    }
     }
   </div>
 </div>
+
 <form id="assignGroupForm">
   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-  
   <button>Save</button>
 </form>
 
 <script>
   const lessonListItems = document.querySelectorAll('.lesson-list li');
-  const scheduleCells = document.querySelectorAll('.schedule .empty');
   const selectedGroups = []; // Array to store selected group objects
 
   lessonListItems.forEach(item => {
@@ -74,29 +154,29 @@ Layout = "_Layout";
         });
 
         // Fetch the schedule for the selected group
-        fetch(`/GroupSchedules/Index?groupId=${groupId}`)
+        fetch(`/Groups/Get?groupId=${groupId}`)
           .then(response => response.json())
           .then(data => {
             console.log(data);
 
             // Iterate over the fetched data and populate the schedule
-            data.forEach(groupSchedule => {
-              const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-              const lessonDay = dayNames[groupSchedule.dayOfWeek - 1];
+            data.groupSchedules.forEach(groupSchedule => {
+              const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+              const lessonDay = dayNames[groupSchedule.dayOfWeek - 1]; // Ensure it's correctly indexed for all 7 days
 
               // Find the matching schedule cell for the day and time
               const scheduleCell = document.querySelector(`.schedule .empty[data-day="${lessonDay}"][data-time="${groupSchedule.classTime}"]`);
               if (scheduleCell) {
                 scheduleCell.classList.remove('empty');
                 scheduleCell.classList.add('lesson');
-                scheduleCell.textContent = lessonName;
-
+                scheduleCell.innerHTML =`<strong>${lessonName}</strong><br> ${data.subject.name}`;
+                  
                 // Store the schedule information in the selectedGroups array
                 const group = selectedGroups.find(g => g.id === groupId);
                 group.schedule.push({
                   time: groupSchedule.classTime,
                   day: lessonDay,
-                  lessonName: lessonName
+                  lessonName: lessonName,
                 });
 
                 // Optionally set data attributes (if needed)
@@ -152,7 +232,7 @@ Layout = "_Layout";
         if (response.ok) {
           console.log('Successfully saved');
         } else {
-          @*alert(response.statusText);*@
+          alert(response.statusText);
         }
       })
       .catch(error => {
@@ -161,6 +241,5 @@ Layout = "_Layout";
       });
   });
 </script>
-
 
 </body>

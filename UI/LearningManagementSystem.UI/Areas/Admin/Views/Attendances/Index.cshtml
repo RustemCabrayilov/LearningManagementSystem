@@ -10,6 +10,7 @@
         <th>Id</th>
         <th>Lesson</th>
         <th>StudentNo</th>
+        <th>Student</th>
         <th>Absence</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -22,6 +23,7 @@
             <td>@item.Id</td>
             <td>@item.Lesson.Name</td>
             <td>@item.Student.StudentNo</td>
+            <td>@item.Student.Name @item.Student.Surname</td>
             <td>@item.Absence</td>
             <td>
                 <a class="btn btn-warning" asp-area="admin" asp-controller="Faculties" asp-action="Edit" asp-route-id="@item.Id">
@@ -39,3 +41,4 @@
     }
     </tbody>
 </table>
+<partial name="_Pagination"/>

@@ -12,6 +12,7 @@ namespace LearningManagementSystem.BLL.Services.Survey;
 public class SurveyService(
     IGenericRepository<Domain.Entities.Survey> _surveyRepository,
     IGenericRepository<Domain.Entities.Question> _questionRepository,
+    IGenericRepository<Domain.Entities.Vote> _voteRepository,
     IRedisCachingService _redisCachingService,
     IMapper _mapper,
     IUnitOfWork _unitOfWork) : ISurveyService
@@ -26,12 +27,16 @@ public class SurveyService(
 
     public async Task<SurveyResponse> UpdateAsync(Guid id, SurveyRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<SurveyResponse>(key);
         var entity = await _surveyRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Survey not found");
         _mapper.Map(dto, entity);
         _surveyRepository.Update(entity);
         _unitOfWork.SaveChanges();
-        return _mapper.Map<SurveyResponse>(entity);
+        var outDto = _mapper.Map<SurveyResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
+        return outDto;
     }
 
     public async Task<SurveyResponse> RemoveAsync(Guid id)
@@ -55,7 +60,12 @@ public class SurveyService(
         {
             AllUsers = true
         }).ToListAsync();
+        var votes = await _voteRepository.GetAll(x => x.SurveyId == entity.Id && !x.IsDeleted, new()
+        {
+            AllUsers = true
+        }).ToListAsync();
         entity.Questions = questions;
+        entity.Votes = votes;
         var outDto=_mapper.Map<SurveyResponse>(entity);
         _redisCachingService.SetData(key, outDto);
         return outDto;

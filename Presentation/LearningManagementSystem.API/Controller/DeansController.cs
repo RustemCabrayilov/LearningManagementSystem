@@ -36,6 +36,7 @@ public class DeansController(IDeanService _deanService) : ControllerBase
     }
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin,Dean")]
+    [ServiceFilter(typeof(ValidationFilter<DeanRequest>))]
     public async Task<IActionResult> Put(Guid id, [FromForm]DeanRequest request)
     {
         var response = await _deanService.UpdateAsync(id, request); 
@@ -48,11 +49,4 @@ public class DeansController(IDeanService _deanService) : ControllerBase
         var response = await _deanService.RemoveAsync(id); 
         return Ok(response);
     }
-    /*[HttpPost("assign-group")]
-    [Authorize(Roles = "Admin,Dean")]
-    public async Task<IActionResult> Post(TeacherGroupDto request)
-    {
-        var response = await _deanService.AssignGroupAsync(request); 
-        return Ok(response);
-    }*/
 }

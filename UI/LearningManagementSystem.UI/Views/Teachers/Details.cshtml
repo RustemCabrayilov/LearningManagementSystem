@@ -1,4 +1,5 @@
-﻿@model LearningManagementSystem.Application.Abstractions.Services.Teacher.TeacherResponse
+﻿@using LearningManagementSystem.Persistence.Filters
+@model LearningManagementSystem.Application.Abstractions.Services.Teacher.TeacherResponse
 <link rel="stylesheet" href="~/css/details.css">
 <section class="section about-section gray-bg" id="about">
     <div class="container">
@@ -19,10 +20,6 @@
                             <div class="media">
                                 <label>Salary</label>
                                 <p>@Model.Salary</p>
-                            </div>
-                            <div class="media">
-                                <label>Rate</label>
-                                <p>@Model.Rate</p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -53,30 +50,31 @@
             <div class="row">
                 <div class="col-6 col-lg-3">
                     <div class="count-data text-center">
-                        <h6 class="count h2" data-to="500" data-speed="500">500</h6>
-                        <p class="m-0px font-w-600">Happy Clients</p>
+                        <h6 class="count h2" data-to="500" data-speed="500">
+                            <a class="nav-link text-light btn-primary rounded" href="@Url.Action("Index", "Groups")">
+                                Groups
+                            </a>
+                        </h6>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="count-data text-center">
-                        <h6 class="count h2" data-to="150" data-speed="150">150</h6>
-                        <p class="m-0px font-w-600">Project Completed</p>
+                        <h6 class="count h2" data-to="150" data-speed="150">@Model.Rate</h6>
+                        <p class="m-0px font-w-600">Rate</p>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="count-data text-center">
-                        <h6 class="count h2" data-to="850" data-speed="850">850</h6>
-                        <p class="m-0px font-w-600">Photo Capture</p>
-                    </div>
-                </div>
-                <div class="col-6 col-lg-3">
-                    <div class="count-data text-center">
-                        <h6 class="count h2" data-to="190" data-speed="190">190</h6>
-                        <p class="m-0px font-w-600">Telephonic Talk</p>
+                        <h6 class="count h2" data-to="850" data-speed="850">
+                            <a class="nav-link text-light btn-primary rounded"
+                               href="@Url.Action("TeacherSurveys", "Teachers", new RequestFilter() { FilterGuidValue = @Model.Id ,
+                                         FilterField = "TeacherId"})">
+                                Surveys
+                            </a>
+                        </h6>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-

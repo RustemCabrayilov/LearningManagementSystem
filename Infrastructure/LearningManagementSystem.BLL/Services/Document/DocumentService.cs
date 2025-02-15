@@ -55,13 +55,15 @@ public class DocumentService(
             await _unitOfWork.SaveChangesAsync();
         }
 
-        var entities = await _documentRepository.GetAll(x => x.OwnerId == documentByOwner.OwnerId && !x.IsDeleted, null)
+        var entities = await _documentRepository.GetAll(x => x.OwnerId ==documentByOwner.OwnerId && !x.IsDeleted, null)
             .ToListAsync();
         return _mapper.Map<List<DocumentResponse>>(entities);
     }
 
     public async Task<DocumentResponse> UpdateAsync(Guid id, DocumentRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<DocumentResponse>(key);
         var entity = await _documentRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
         if (entity is null) throw new NotFoundException("Document not found");
         var entityToUpdate = _mapper.Map<Domain.Entities.Document>(dto);
@@ -75,6 +77,7 @@ public class DocumentService(
         }
 
         var outDto = _mapper.Map<DocumentResponse>(entity);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
         return outDto;
     }
 
@@ -110,7 +113,7 @@ public class DocumentService(
 
     public async Task<DocumentResponse> GetByOwnerId(Guid ownerId)
     {
-        string key = $"member-{ownerId}";
+        string key = $"member-owner-{ownerId}";
         var data = _redisCachingService.GetData<DocumentResponse>(key);
         if (data is not null)
             return data;

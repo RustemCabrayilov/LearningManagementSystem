@@ -13,6 +13,7 @@ using LearningManagementSystem.Application.Abstractions.Services.OCR;
 using LearningManagementSystem.Application.Abstractions.Services.Question;
 using LearningManagementSystem.Application.Abstractions.Services.RetakeExam;
 using LearningManagementSystem.Application.Abstractions.Services.Role;
+using LearningManagementSystem.Application.Abstractions.Services.Stats;
 using LearningManagementSystem.Application.Abstractions.Services.Student;
 using LearningManagementSystem.Application.Abstractions.Services.StudentExam;
 using LearningManagementSystem.Application.Abstractions.Services.StudentGroup;
@@ -182,23 +183,10 @@ public interface ILearningManagementSystem
     Task<IList<RetakeExamResponse>> RetakeExamList(RequestFilter? filter);
 
     [Post("/api/RetakeExams")]
-    [Multipart]
-    Task<RetakeExamResponse> CreateRetakeExam(
-        [AliasAs("ExamId")] Guid ExamId,
-        [AliasAs("Deadline")] DateTime Deadline,
-        [AliasAs("RetakeExamType")] RetakeExamType RetakeExamType,
-        [AliasAs("Price")] decimal Price,
-        [AliasAs("Files")] List<StreamPart> Files);
+    Task<RetakeExamResponse> CreateRetakeExam(RetakeExamRequest request);
 
     [Put("/api/RetakeExams")]
-    [Multipart]
-    Task<RetakeExamResponse> UpdateRetakeExam(
-        [AliasAs("Id")] Guid id,
-        [AliasAs("ExamId")] Guid ExamId,
-        [AliasAs("Deadline")] DateTime Deadline,
-        [AliasAs("RetakeExamType")] RetakeExamType RetakeExamType,
-        [AliasAs("Price")] decimal Price,
-        [AliasAs("Files")] List<StreamPart> Files);
+    Task<RetakeExamResponse> UpdateRetakeExam(RetakeExamRequest request);
 
     [Delete("/api/RetakeExams")]
     Task<RetakeExamResponse> RemoveRetakeExam(Guid id);
@@ -224,6 +212,9 @@ public interface ILearningManagementSystem
 
     [Get("/api/Attendances/{id}")]
     Task<AttendanceResponse> GetAttendance(Guid id);
+    
+    [Post("/api/Attendances/student-attendance-list")]
+    Task<List<AttendanceResponse>> GetStudentAttendance(StudentAttendanceDto request);
 
     //Question
     [Get("/api/Questions")]
@@ -286,17 +277,17 @@ public interface ILearningManagementSystem
         [AliasAs("Name")] string Name,
         [AliasAs("Surname")] string Surname,
         [AliasAs("StudentNo")] string StudentNo,
-        [AliasAs("File")] StreamPart fileInfoPart);
+        [AliasAs("File")] StreamPart file);
 
     [Multipart]
-    [Put("/api/Subjects/{id}")]
+    [Put("/api/Students/{id}")]
     Task<StudentResponse> UpdateStudent(
         Guid id,
         [AliasAs(("AppUserId"))] string AppUserId,
         [AliasAs("Name")] string Name,
         [AliasAs("Surname")] string Surname,
         [AliasAs("StudentNo")] string StudentNo,
-        [AliasAs("File")] StreamPart fileInfoPart
+        [AliasAs("File")] StreamPart file
     );
 
     [Delete("/api/Students")]
@@ -309,7 +300,7 @@ public interface ILearningManagementSystem
     Task<IActionResult> AssignGroup(StudentGroupDto request);
     
     [Post("/api/Students/assign-retakeExam")]
-    Task<StudentResponse> AssignRetakeExam(StudentRetakeExamDto request);
+    Task<StudentRetakeExamResponse> AssignRetakeExam(StudentRetakeExamDto request);
 
     [Post("/api/Students/assign-group-list")]
     Task<StudentGroupDto[]> AssignGroupList(StudentGroupDto[] request);
@@ -389,7 +380,7 @@ public interface ILearningManagementSystem
         [AliasAs("PositionType")] int positionType,
         [AliasAs("FacultyId")] string facultyId,
         [AliasAs("AppUserId")] string appUserId,
-        [AliasAs("File")] FileInfoPart file);
+        [AliasAs("File")] StreamPart file);
 
     [Delete("/api/Deans")]
     Task<DeanResponse> RemoveDean(Guid id);
@@ -422,9 +413,9 @@ public interface ILearningManagementSystem
     [Multipart]
     [Post("/api/Documents/create-byowner")]
     Task<List<DocumentResponse>> CreateDocumentByOwner(
-        [AliasAs("Files")] List<StreamPart> Files,
-        [AliasAs("OwnerId")] Guid OwnerId,
-        [AliasAs("DocumentType")] DocumentType DocumentType);
+        [AliasAs("Files")] StreamPart[] files,
+        [AliasAs("OwnerId")] string ownerId,
+        [AliasAs("DocumentType")] string documentType);
 
     [Get("/api/Documents/get-byowner/{ownerId}")]
     Task<DocumentResponse> GetByOwner(Guid ownerId);
@@ -444,7 +435,6 @@ public interface ILearningManagementSystem
 
     [Get("/api/Auth/confirm-email")]
     Task ConfirmEmail(string email, string token);
-
     [Put("/api/StudentExams/studentExam-list")]
     Task<StudentExamResponse[]> UpdateStudentExam(StudentExamRequest[] requests);
 
@@ -476,6 +466,9 @@ public interface ILearningManagementSystem
     //StudentRetakeExam
     [Get("/api/StudentRetakeExams")]
     Task<IList<StudentRetakeExamResponse>> StudentRetakeExamList(RequestFilter? filter);
+    
+    [Get("/api/StudentRetakeExams/active-term-requests")]
+    Task<IList<StudentRetakeExamResponse>> ActiveTermRequests(RequestFilter? filter);
 
     [Post("/api/StudentRetakeExams")]
     Task<StudentRetakeExamResponse> CreateStudentRetakeExam(StudentRetakeExamDto dto);
@@ -548,11 +541,27 @@ public interface ILearningManagementSystem
     [Get("/api/Votes/{id}")]
     Task<VoteResponse> GetVote(Guid id);  
     //Chat
-    [Get("/api/Chat/{id}")]
-    Task<ChatResponse> GetChatUsers(string id);
+    [Get("/api/Chats/{id}")]
+    Task<List<UserResponse>> GetChatUsers(string id);
     
-    [Post("/api/Chat")]
-    Task<ChatRequest> SendMessage(ChatRequest request);
+    [Post("/api/Chats")]
+    Task<ChatResponse> SendMessage(ChatRequest request);
+    
+    [Post("/api/Chats/get-chat-messages")]
+    Task<List<ChatResponse>> GetChatMessages(ChatMessageDto request);
+    
+    //Stats
+    [Get("/api/Stats/average-students")]
+    Task<List<StatsResponse<StudentResponse>>> AvergaeOfStudents();
+    
+    [Get("/api/Stats/top-teacher-rate")]
+    Task<List<StatsResponse<TeacherResponse>>> TopRatedTeachers();
+    
+    [Get("/api/Stats/most-failed-subjects")]
+    Task<List<StatsResponse<SubjectResponse>>> MostFailedSubjects();
+    
+    [Get("/api/Stats/most-efficient-teachers")]
+    Task<List<StatsResponse<TeacherResponse>>> MostEfficientTeachers();
 
 
 }

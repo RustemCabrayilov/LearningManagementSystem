@@ -28,9 +28,10 @@ public class AppDbContext:IdentityDbContext<AppUser,AppRole,string>
     public DbSet<StudentExam> StudentExams { get; set; }
     public DbSet<StudentGroup> StudentGroups { get; set; }
     public DbSet<StudentRetakeExam> StudentRetakeExams { get; set; }
-    public DbSet<StudentMajor> StudentMajors { get; set; }
     public DbSet<StudentSubject> StudentSubjects { get; set; }
     public DbSet<Document> Documents { get; set; }
     public DbSet<SubjectMajor> SubjectMajors { get; set; }
     public DbSet<Theme> Themes { get; set; }
+    public DbSet<Exam> Exams { get; set; }
+    public DbSet<Chat> Chats { get; set; }
 }

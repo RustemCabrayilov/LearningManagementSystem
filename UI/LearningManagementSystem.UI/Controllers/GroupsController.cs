@@ -10,14 +10,10 @@ public class GroupsController(ILearningManagementSystem _learningManagementSyste
     // GET
     public async Task<IActionResult> Get(Guid groupId)
     {
-        var responses = await _learningManagementSystem.GroupScheduleList(new RequestFilter()
-        {
-            FilterField = "GroupId",
-            FilterGuidValue = groupId
-        });
+        var response = await _learningManagementSystem.GetGroup(groupId);
 
         // Return the schedule data in a format that can be easily consumed by JavaScript
-        return Json(responses);
+        return Json(response);
     }
 
     public async Task<IActionResult> Index([FromQuery]RequestFilter filter)

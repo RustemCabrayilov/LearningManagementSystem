@@ -4,11 +4,11 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <form class="forms-sample" asp-action="Create" enctype="multipart/form-data">
+            <form class="forms-sample" asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="RetakeExamType" class="control-label">
-                        Exam Type
+                       Retake Exam Type
                     </label>
                     <select asp-for="RetakeExamType" class="form-control" asp-items="@(new SelectList(ViewBag.ReTakeExamTypeList))">
                         <option>Please select one</option>
@@ -16,28 +16,23 @@
                     <span asp-validation-for="RetakeExamType" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Deadline">Start Date</label>
-                    <input asp-for="Deadline" type="datetime" class="form-control" id="Deadline" placeholder="Deadline">
+                    <label asp-for="Deadline">Deadline</label>
+                    <input asp-for="Deadline" type="datetime-local" class="form-control" id="Deadline" placeholder="Deadline">
                     <span asp-validation-for="Deadline" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Price">End Date</label>
+                    <label asp-for="Price">Price</label>
                     <input asp-for="Price" type="number" class="form-control" id="Price" placeholder="Price">
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ExamId" class="control-label">Subject</label>
+                    <label asp-for="ExamId" class="control-label">Exam</label>
                     <select asp-for="ExamId"
                             class="form-control"
                             asp-items="@(new SelectList(ViewBag.Exams,"Id","Name"))">
                         <option>Please select one</option>
                     </select>
                     <span asp-validation-for="ExamId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Files" class="control-label"></label>
-                    <input asp-for="Files" type="file" multiple class="form-control" />
-                    <span asp-validation-for="Files" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                 <button class="btn btn-light" asp-action="Index">Cancel</button>

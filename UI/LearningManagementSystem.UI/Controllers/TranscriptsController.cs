@@ -3,26 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearningManagementSystem.UI.Controllers;
 
-public class TranscriptsController(ILearningManagementSystem _learningManagementSystem,
-    IHttpContextAccessor _httpContextAccessor) : Controller
+public class TranscriptsController(ILearningManagementSystem _learningManagementSystem
+ ) : Controller
 {
     // GET
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(Guid studentId)
     {
-        var token = _httpContextAccessor?.HttpContext?.Request.Cookies["access_token"];
-        var userclaim = await _learningManagementSystem.GetUserInfosByToken(token);
-        var students = await _learningManagementSystem.StudentList(new()
-        {
-            FilterField = "AppUserId",
-            FilterValue = userclaim.Id
-        });
-        var student = students.FirstOrDefault();
-        var response = await _learningManagementSystem.TranscriptList(new()
-        {
-            AllUsers = true,
-            FilterField = "StudentId",
-            FilterValue =$"{student?.Id}"
-        });
+        var student = await _learningManagementSystem.GetStudent(studentId);
+        var response = student?.Transcripts;
         return View(response);
     }
 }

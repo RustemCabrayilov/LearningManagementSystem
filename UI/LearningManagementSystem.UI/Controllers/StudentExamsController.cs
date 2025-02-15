@@ -1,22 +1,19 @@
-﻿using LearningManagementSystem.Persistence.Filters;
+﻿using LearningManagementSystem.Domain.Enums;
+using LearningManagementSystem.Persistence.Filters;
 using LearningManagementSystem.UI.Integrations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearningManagementSystem.UI.Controllers;
 
-public class StudentExamsController(HttpContextAccessor _httpContextAccessor,
+public class StudentExamsController(
     ILearningManagementSystem _learningManagementSystem) : Controller
 {
     // GET
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(Guid studentId)
     {
-        var token = _httpContextAccessor?.HttpContext?.Request.Cookies["access_token"];
-        var userclaim = await _learningManagementSystem.GetUserInfosByToken(token);
-        var students = await _learningManagementSystem.StudentList(new RequestFilter()
-            { FilterField = "AppUserId", FilterValue = userclaim.Id });
-        var student = students.FirstOrDefault();
+        var student =await _learningManagementSystem.GetStudent(studentId);
         ViewBag.Groups = student.Groups;
-        ViewBag.StudentExams = student.StudentExams;
-        return View();
+        var response= student.StudentExams;
+        return View(response);
     }
 }

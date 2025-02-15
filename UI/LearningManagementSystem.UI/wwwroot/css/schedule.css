@@ -86,3 +86,42 @@
 .schedule .empty {
     background-color: #f1f1f1;
 }
+
+.schedule {
+    display: grid;
+    grid-template-columns: 100px repeat(5, 1fr); /* Time slots in the first column and 5 equal-width columns for weekdays */
+    grid-template-rows: repeat(7, 50px); /* One row for the header and the rest for time slots */
+    gap: 1px;
+}
+
+.header {
+    background-color: #f1f1f1;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.time-slot {
+    background-color: #f9f9f9;
+    padding: 10px;
+    text-align: center;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.empty {
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.lesson {
+    background-color: #cce7ff;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #99c2ff;
+    padding: 10px;
+    font-size: 12px;
+}

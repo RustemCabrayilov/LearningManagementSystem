@@ -20,10 +20,10 @@ public class StudentsController(
         var responses = await _learningManagementSystem.StudentList(filter);
         var responseTasks = responses.Select(async response =>
         {
-            var qrCodeStream =await _learningManagementSystem.GenerateQRCode(response.Id);
+            var qrCodeStream = await _learningManagementSystem.GenerateQRCode(response.Id);
 
             using var memoryStream = new MemoryStream();
-          await  qrCodeStream.CopyToAsync(memoryStream);
+            await qrCodeStream.CopyToAsync(memoryStream);
             var qrCodeBytes = memoryStream.ToArray();
             var base64String = Convert.ToBase64String(qrCodeBytes);
             string qrCodeUrl = $"data:image/png;base64,{base64String}";
@@ -31,7 +31,7 @@ public class StudentsController(
             return response with { QrCodeUrl = qrCodeUrl };
         }).ToList();
         responses = await Task.WhenAll(responseTasks);
-        int totalStudents = _learningManagementSystem.StudentList(new RequestFilter(){AllUsers = true}).Result.Count;
+        int totalStudents = _learningManagementSystem.StudentList(new RequestFilter() { AllUsers = true }).Result.Count;
         ViewBag.TotalPages = (int)Math.Ceiling(totalStudents / (double)filter.Count);
         ViewBag.CurrentPage = filter.Page;
         return View(responses);
@@ -42,7 +42,10 @@ public class StudentsController(
         try
         {
             var response = await _learningManagementSystem.GetStudent(id);
-            var model = new StudentRequest(response.AppUser.Id, response.Name, response.Surname, response.StudentNo,
+            var model = new StudentRequest(response.AppUser.Id,
+                response.Name,
+                response.Surname,
+                response.StudentNo,
                 null);
             ViewBag.Users = await _learningManagementSystem
                 .UserList(null);
@@ -62,15 +65,6 @@ public class StudentsController(
         {
             try
             {
-                /*var tempFilePath = Path.GetTempFileName();
-                await using (var stream = new FileStream(tempFilePath, FileMode.Create))
-                {
-                    await request.File.CopyToAsync(stream);
-                }
-
-                string filePath = tempFilePath;
-                var fileInfo = new FileInfo(filePath);
-                FileInfoPart fileInfoPart = new FileInfoPart(fileInfo, fileInfo.Name);*/
                 var fileName = Path.GetFileName(request.File.FileName);
                 // Use ASP.NET Core to get MIME type
                 var provider = new FileExtensionContentTypeProvider();
@@ -81,6 +75,7 @@ public class StudentsController(
                     // If MIME type could not be determined, set a default type
                     mimeType = "application/octet-stream";
                 }
+
                 var fileStream = request.File.OpenReadStream();
                 var streamPart = new StreamPart(fileStream, fileName, mimeType, "file");
                 var response = await _learningManagementSystem.UpdateStudent(id,
@@ -118,7 +113,15 @@ public class StudentsController(
     public async Task<IActionResult> Create()
     {
         ViewBag.Users = await _learningManagementSystem
-            .UserList(null);
+            .UserList(new()
+            {
+                AllUsers = true
+            });
+        ViewBag.Majors = await _learningManagementSystem
+            .MajorList(new()
+            {
+                AllUsers = true
+            });
         return View();
     }
 
@@ -148,6 +151,7 @@ public class StudentsController(
                     // If MIME type could not be determined, set a default type
                     mimeType = "application/octet-stream";
                 }
+
                 var fileStream = request.File.OpenReadStream();
                 var streamPart = new StreamPart(fileStream, fileName, mimeType, "file");
                 var response = await _learningManagementSystem.CreateStudent(
@@ -198,22 +202,8 @@ public class StudentsController(
             {
                 student = response,
                 fileUrl = document.Path,
-                fileName=document.FileName
+                fileName = document.FileName
             }
         );
-    }
-    
-
-
-    public async Task<IActionResult> AssignMajor(Guid id)
-    {
-        var model = new StudentMajorDto(id,Guid.Empty);
-        return View(model);
-    }
-    
-    public async Task<IActionResult> AssignMajor(StudentMajorDto dto)
-    {
-        /*var response=await _learningManagementSystem.a;*/
-        return RedirectToAction("Index");
     }
 }

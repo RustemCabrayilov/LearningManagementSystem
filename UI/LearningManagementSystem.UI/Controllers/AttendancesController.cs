@@ -8,55 +8,20 @@ using Refit;
 
 namespace LearningManagementSystem.UI.Controllers;
 
-public class AttendancesController(ILearningManagementSystem _learningManagementSystem,
+public class AttendancesController(
+    ILearningManagementSystem _learningManagementSystem,
+    IHttpContextAccessor _httpContextAccessor,
     IToastNotification _toastNotification) : Controller
 {
-    // GET
-    public async  Task<IActionResult> CheckAttendance(Guid lessonId)
+    public async Task<IActionResult> Index(Guid groupId)
     {
-        var attendance = await _learningManagementSystem.AttendanceList(new RequestFilter()
-            { FilterField = "LessonId", FilterGuidValue = lessonId });
-
-        return View(attendance.ToArray());
+        var token = _httpContextAccessor?.HttpContext?.Request.Cookies["access_token"];
+        var userclaim = await _learningManagementSystem.GetUserInfosByToken(token);
+        var students = await _learningManagementSystem.StudentList(new RequestFilter()
+            { FilterField = "AppUserId", FilterValue = userclaim.Id });
+        var student = students.FirstOrDefault();
+        var response = await _learningManagementSystem.GetStudent(student.Id);
+        var attendances = await _learningManagementSystem.GetStudentAttendance(new(response.Id,groupId));
+        return View(attendances);
     }
-
-    [HttpPost]
-    public async Task<IActionResult> CheckAttendance(AttendanceResponse[] attendances)
-    {
-        try
-        {
-            List<AttendanceRequest> requests = new List<AttendanceRequest>();
-            foreach (var attendance in attendances)
-            {
-                requests.Add(new AttendanceRequest(attendance.Id, attendance.Student.Id, attendance.Lesson.Id,
-                    attendance.Absence));
-            }
-
-            var response = await _learningManagementSystem.UpdateAttendanceList(requests.ToArray());
-        }
-        catch (ValidationApiException e)
-        {
-            _toastNotification.AddErrorToastMessage(e?.Content?.Errors.FirstOrDefault().Value[0].FirstOrDefault().ToString());
-            return RedirectToAction("CheckAttendance");
-        }
-        catch (ApiException e)
-        {
-            var errorContent = JsonConvert.DeserializeObject<Dictionary<string, string>>(e.Content);
-            if (errorContent != null && errorContent.ContainsKey("detail"))
-            {
-                var errorMessage = errorContent["detail"];
-                _toastNotification.AddErrorToastMessage(errorMessage);
-            }
-            return RedirectToAction("CheckAttendance");
-        }
-        catch (Exception e)
-        {
-            _toastNotification.AddErrorToastMessage(e.Message);
-            return RedirectToAction("CheckAttendance");
-        }
-
-        return RedirectToAction("Index", "Exams");
-
-    }
-    
 }

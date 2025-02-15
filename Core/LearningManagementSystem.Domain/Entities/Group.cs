@@ -22,4 +22,6 @@ public class Group:BaseEntity
     public List<Lesson> Lessons { get; set; }
     public List<Exam> Exams { get; set; }
     public List<GroupSchedule> GroupSchedules { get; set; }
+    public List<StudentGroup> StudentGroups { get; set; }
+    public List<Transcript> Transcripts { get; set; }
 }

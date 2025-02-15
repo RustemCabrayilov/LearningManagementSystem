@@ -34,6 +34,8 @@ public class UserService(
 
     public async Task<UserResponse> UpdateAsync(string id, UserRequest dto)
     {
+        string key = $"member-{id}";
+        var data = _redisCachingService.GetData<UserResponse>(key);
         var entity = await _userManager.FindByIdAsync(id.ToString());
         if (entity is null) throw new NotFoundException("User not found");
         _mapper.Map(dto, entity);
@@ -44,6 +46,7 @@ public class UserService(
         var outDto = _mapper.Map<UserResponse>(entity);
         var userRoles = await _userManager.GetRolesAsync(entity);
         outDto.Roles.AddRange(userRoles);
+        if(data is not null) _redisCachingService.SetData(key, outDto);
         return outDto;
     }
 

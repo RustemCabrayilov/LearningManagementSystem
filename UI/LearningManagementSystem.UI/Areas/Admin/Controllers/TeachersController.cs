@@ -183,5 +183,17 @@ public class TeachersController(
         await _learningManagementSystem.RemoveTeacher(id);
         return RedirectToAction("Index");
     }
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var response = await _learningManagementSystem.GetTeacher(id);
+        var document = await _learningManagementSystem.GetByOwner(id);
+        return Json(new
+            {
+                teacher = response,
+                fileUrl = document.Path,
+                fileName=document.FileName
+            }
+        );
+    }
 
 }

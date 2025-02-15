@@ -3,5 +3,6 @@
 public record VoteRequest(
     int Point,
     Guid QuestionId,
-    Guid StudentId
+    Guid StudentId,
+    Guid SurveyId
 );

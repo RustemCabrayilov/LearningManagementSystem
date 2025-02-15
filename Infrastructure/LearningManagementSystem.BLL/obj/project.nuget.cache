@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "y/qjPz+ag2o=",
+  "dgSpecHash": "Quo/aRhuuNc=",
   "success": true,
   "projectFilePath": "C:\\Users\\ASUS\\Desktop\\FinalProject\\LearningManagementSystem\\Infrastructure\\LearningManagementSystem.BLL\\LearningManagementSystem.BLL.csproj",
   "expectedPackageFiles": [
@@ -40,6 +40,7 @@
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\7.1.2\\microsoft.identitymodel.jsonwebtokens.7.1.2.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.identitymodel.logging\\7.1.2\\microsoft.identitymodel.logging.7.1.2.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.1.2\\microsoft.identitymodel.tokens.7.1.2.nupkg.sha512",
+    "C:\\Users\\ASUS\\.nuget\\packages\\refit\\8.0.0\\refit.8.0.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\serilog\\4.2.0\\serilog.4.2.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\serilog.aspnetcore\\9.0.0\\serilog.aspnetcore.9.0.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\serilog.extensions.hosting\\9.0.0\\serilog.extensions.hosting.9.0.0.nupkg.sha512",
